@@ -9,6 +9,5 @@ android {
 
 dependencies {
     implementation(project(":core:service"))
-    implementation(project(":core:preferences"))
     implementation(project(":core:model"))
 }

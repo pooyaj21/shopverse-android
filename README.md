@@ -10,7 +10,6 @@ with Clean Architecture layering.
 :app                     Android application — only ShopVerseApplication.kt for now.
 :core:shared             JVM library — coroutine helpers, AppResult, DispatcherProvider.
 :core:model              Android library — domain entities / DTOs.
-:core:preferences        Android library — Repository interfaces for persistent storage.
 :core:service            Android library — network / service interfaces.
 :core:data               Android library — Retrofit + Room impls, DI bindings.
 :core:domain             Android library — UseCases + Koin module.
@@ -20,7 +19,7 @@ with Clean Architecture layering.
 Dependency direction (modules never depend "upward"):
 
 ```
-app → domain → data → { service, preferences, model }, all share :core:shared
+app → domain → data → { service, model }, all share :core:shared
 ```
 
 ## Convention plugins (`build-logic/convention`)
