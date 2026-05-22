@@ -1,6 +1,7 @@
 package com.shopverse.android.core.extension
 
 import android.view.View
+import com.shopverse.android.core.color.AppColor
 
 fun View.setPadding(
     left: Int = paddingLeft,
@@ -21,4 +22,8 @@ fun View.setPadding(
         right = horizontal ?: paddingRight,
         bottom = vertical ?: paddingBottom
     )
+}
+
+fun View.setBackgroundColor(color: AppColor) {
+    setBackgroundColor(color.value(context))
 }

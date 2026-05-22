@@ -1,0 +1,88 @@
+package com.shopverse.android.core.typography
+
+
+enum class Typography(val typeFaceStyle: TypeFaceStyle, val fontSize: Int) {
+    // Light
+    L10(TypeFaceStyle.Light, 10),
+    L12(TypeFaceStyle.Light, 12),
+    L13(TypeFaceStyle.Light, 13),
+    L14(TypeFaceStyle.Light, 14),
+    L16(TypeFaceStyle.Light, 16),
+    L18(TypeFaceStyle.Light, 18),
+    L20(TypeFaceStyle.Light, 20),
+    L24(TypeFaceStyle.Light, 24),
+    L28(TypeFaceStyle.Light, 28),
+    L32(TypeFaceStyle.Light, 32),
+    L36(TypeFaceStyle.Light, 36),
+    L40(TypeFaceStyle.Light, 40),
+
+    // Regular
+    R10(TypeFaceStyle.Regular, 10),
+    R12(TypeFaceStyle.Regular, 12),
+    R13(TypeFaceStyle.Regular, 13),
+    R14(TypeFaceStyle.Regular, 14),
+    R16(TypeFaceStyle.Regular, 16),
+    R18(TypeFaceStyle.Regular, 18),
+    R20(TypeFaceStyle.Regular, 20),
+    R24(TypeFaceStyle.Regular, 24),
+    R28(TypeFaceStyle.Regular, 28),
+    R32(TypeFaceStyle.Regular, 32),
+    R36(TypeFaceStyle.Regular, 36),
+    R40(TypeFaceStyle.Regular, 40),
+
+    // Medium
+    M10(TypeFaceStyle.Medium, 10),
+    M12(TypeFaceStyle.Medium, 12),
+    M13(TypeFaceStyle.Medium, 13),
+    M14(TypeFaceStyle.Medium, 14),
+    M16(TypeFaceStyle.Medium, 16),
+    M18(TypeFaceStyle.Medium, 18),
+    M20(TypeFaceStyle.Medium, 20),
+    M24(TypeFaceStyle.Medium, 24),
+    M28(TypeFaceStyle.Medium, 28),
+    M32(TypeFaceStyle.Medium, 32),
+    M36(TypeFaceStyle.Medium, 36),
+    M40(TypeFaceStyle.Medium, 40),
+
+    // Smi Bold
+    SB10(TypeFaceStyle.SmiBold, 10),
+    SB12(TypeFaceStyle.SmiBold, 12),
+    SB13(TypeFaceStyle.SmiBold, 13),
+    SB14(TypeFaceStyle.SmiBold, 14),
+    SB16(TypeFaceStyle.SmiBold, 16),
+    SB18(TypeFaceStyle.SmiBold, 18),
+    SB20(TypeFaceStyle.SmiBold, 20),
+    SB24(TypeFaceStyle.SmiBold, 24),
+    SB28(TypeFaceStyle.SmiBold, 28),
+    SB32(TypeFaceStyle.SmiBold, 32),
+    SB36(TypeFaceStyle.SmiBold, 36),
+    SB40(TypeFaceStyle.SmiBold, 40),
+
+    // Bold
+    B10(TypeFaceStyle.Bold, 10),
+    B12(TypeFaceStyle.Bold, 12),
+    B13(TypeFaceStyle.Bold, 13),
+    B14(TypeFaceStyle.Bold, 14),
+    B16(TypeFaceStyle.Bold, 16),
+    B18(TypeFaceStyle.Bold, 18),
+    B20(TypeFaceStyle.Bold, 20),
+    B24(TypeFaceStyle.Bold, 24),
+    B28(TypeFaceStyle.Bold, 28),
+    B32(TypeFaceStyle.Bold, 32),
+    B36(TypeFaceStyle.Bold, 36),
+    B40(TypeFaceStyle.Bold, 40),
+
+    // Extra Bold
+    EB10(TypeFaceStyle.ExtraBold, 10),
+    EB12(TypeFaceStyle.ExtraBold, 12),
+    EB13(TypeFaceStyle.ExtraBold, 13),
+    EB14(TypeFaceStyle.ExtraBold, 14),
+    EB16(TypeFaceStyle.ExtraBold, 16),
+    EB18(TypeFaceStyle.ExtraBold, 18),
+    EB20(TypeFaceStyle.ExtraBold, 20),
+    EB24(TypeFaceStyle.ExtraBold, 24),
+    EB28(TypeFaceStyle.ExtraBold, 28),
+    EB32(TypeFaceStyle.ExtraBold, 32),
+    EB36(TypeFaceStyle.ExtraBold, 36),
+    EB40(TypeFaceStyle.ExtraBold, 40),
+}
