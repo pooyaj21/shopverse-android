@@ -1,6 +1,7 @@
 package com.shopverse.android
 
 import android.app.Application
+import com.shopverse.core.domain.di.domainDiModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -10,7 +11,8 @@ class ShopVerseApplication : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@ShopVerseApplication)
-            // modules(...) — wired in once :core:domain exposes its Koin module
+            // domainDiModule transitively wires data + service + preferences.
+            modules(domainDiModule)
         }
     }
 }

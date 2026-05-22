@@ -7,20 +7,34 @@ with Clean Architecture layering.
 ## Module layout
 
 ```
-:app                     Android application — only ShopVerseApplication.kt for now.
-:core:shared             JVM library — coroutine helpers, AppResult, DispatcherProvider.
-:core:model              Android library — domain entities / DTOs.
-:core:service            Android library — network / service interfaces.
-:core:data               Android library — Retrofit + Room impls, DI bindings.
-:core:domain             Android library — UseCases + Koin module.
+:app                     Android application — ShopVerseApplication wires Koin.
+:core:shared             JVM library — AppResult, DispatcherProvider, EnvironmentConfiguration.
+:core:model              Android library — BaseModel + Meta + Pagination (entity base types).
+:core:preferences        Android library — EncryptedSharedPreferences + SharedPref wrapper + Koin DI.
+:core:service            Android library — service interfaces live here. Empty Koin module.
+:core:data               Android library — repository interfaces + impls live here. DispatcherProvider binding.
+:core:domain             Android library — UseCases live here. Koin module includes data.
 :build-logic:convention  Included build — Gradle convention plugins.
 ```
 
 Dependency direction (modules never depend "upward"):
 
 ```
-app → domain → data → { service, model }, all share :core:shared
+app → domain → data → { service, model, preferences }, all share :core:shared
 ```
+
+## Koin module graph
+
+`ShopVerseApplication` starts Koin with `domainDiModule`, which transitively includes:
+
+```
+domainDiModule
+  └── dataDiModule
+        ├── serviceDiModule
+        └── preferencesDiModule
+```
+
+Each layer owns its own `di/DI.kt` and only includes the layer directly beneath it.
 
 ## Convention plugins (`build-logic/convention`)
 
@@ -39,12 +53,16 @@ SDK levels and JVM target are centralised in
 
 ## What's NOT in here yet (intentional)
 
-This is just the shell. No API clients, no use cases, no Room database,
-no screens. Coming in later weeks per `../shopverse-idea/week-2-android-foundation.md`
-and `week-3-android-polish.md`:
+This is the architectural shell only. Every module compiles and the Koin
+graph is wired end-to-end, but no domain entities, services, repositories,
+or use cases are implemented yet. Coming per
+`../shopverse-idea/week-2-android-foundation.md` and
+`week-3-android-polish.md`:
 
-- Retrofit + Supabase wiring in `:core:service` / `:core:data`
-- Domain `UseCase` pairs in `:core:domain`
+- Domain entities in `:core:model` (Product, Cart, Order, …)
+- Retrofit / Ktor services in `:core:service`
+- Room database + DAOs and repository impls in `:core:data`
+- Use cases in `:core:domain`
 - Compose screens + ViewModels in `:app/presentation/`
 - MainActivity + nav graph
 

@@ -10,4 +10,5 @@ android {
 dependencies {
     implementation(project(":core:service"))
     implementation(project(":core:model"))
+    implementation(project(":core:preferences"))
 }

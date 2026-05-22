@@ -20,6 +20,7 @@ includeBuild("build-logic")
 
 include(":app")
 include(":core:shared")
+include(":core:preferences")
 include(":core:service")
 include(":core:model")
 include(":core:data")

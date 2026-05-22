@@ -6,6 +6,17 @@
     <application
         android:name=".ShopVerseApplication"
         android:allowBackup="false"
-        android:label="ShopVerse"
-        android:supportsRtl="true" />
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ShopVerse">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
 </manifest>

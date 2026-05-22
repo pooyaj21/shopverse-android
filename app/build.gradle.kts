@@ -22,4 +22,8 @@ dependencies {
     implementation(project(":core:service"))
     implementation(project(":core:data"))
     implementation(project(":core:domain"))
+
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.android.material)
 }
