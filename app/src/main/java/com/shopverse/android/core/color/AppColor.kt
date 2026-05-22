@@ -9,7 +9,7 @@ import com.shopverse.android.core.extension.isDarkModeOn
 
 class AppColor(
     @ColorInt private val light: Int,
-    @ColorInt private val manualDark: Int? = null
+    @ColorInt private val dark: Int? = null
 ) {
     val computedLight: Int
         get() {
@@ -17,13 +17,13 @@ class AppColor(
         }
     val computedDark: Int
         get() {
-            return manualDark ?: inverted(light)
+            return dark ?: inverted(light)
         }
 
     fun sameColorAlpha(@IntRange(from = 0, to = 255) alpha: Int): AppColor {
         return AppColor(
             light = changeAlpha(computedLight, alpha),
-            manualDark = changeAlpha(computedDark, alpha)
+            dark = changeAlpha(computedDark, alpha)
         )
     }
 

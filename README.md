@@ -1,9 +1,5 @@
 # shopverse-android
 
-Native Kotlin Android client for ShopVerse. Architecture mirrors the
-internal `Provin` project: convention-plugin-driven multi-module setup
-with Clean Architecture layering.
-
 ## Module layout
 
 ```

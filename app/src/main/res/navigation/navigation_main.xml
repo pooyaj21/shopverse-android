@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_main"
+    app:startDestination="@id/splashFragment">
+
+    <fragment android:id="@+id/splashFragment" android:label="SplashFragment" android:name="com.shopverse.android.presentation.screen.splash.SplashFragment">
+        <argument android:name="screenArgs" app:argType="com.shopverse.android.presentation.ui.NoRequirementArgs"/>
+    </fragment>
+
+    <fragment android:id="@+id/onboardingFragment" android:label="OnboardingFragment" android:name="com.shopverse.android.presentation.screen.onboarding.OnboardingFragment">
+        <argument android:name="screenArgs" app:argType="com.shopverse.android.presentation.ui.NoRequirementArgs"/>
+    </fragment>
+
+    <fragment android:id="@+id/homeFragment" android:label="HomeFragment" android:name="com.shopverse.android.presentation.screen.home.HomeFragment">
+        <argument android:name="screenArgs" app:argType="com.shopverse.android.presentation.ui.NoRequirementArgs"/>
+    </fragment>
+</navigation>

@@ -1,0 +1,51 @@
+package com.shopverse.android.presentation.ui
+
+import android.os.Bundle
+import android.view.View
+import androidx.annotation.IdRes
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
+import com.shopverse.android.R
+import com.shopverse.android.core.stage.AppStage
+
+
+private fun Fragment.navigate(
+    @IdRes fragmentId: Int, args: ScreenArgument<*>, clearBackStack: Boolean = false
+) {
+    val navOptions = navOptions {
+        if (clearBackStack) popUpTo(R.id.navigation_main) {}
+    }
+    findNavController().navigate(fragmentId, args.toBundle(), navOptions)
+}
+
+fun Fragment.navigateUp() = findNavController().navigateUp()
+
+fun View.navigateUp() = findNavController().navigateUp()
+
+fun View.navigate(@IdRes fragmentId: Int, args: Bundle) =
+    findNavController().navigate(fragmentId, args)
+
+fun Fragment.navigateUpTo(@IdRes fragmentId: Int, inclusive: Boolean = false) =
+    findNavController().popBackStack(fragmentId, inclusive)
+
+fun Fragment.navigateAndClearStack(appStage: AppStage, source: Source) {
+    val destination: Pair<Int, Bundle> = when (appStage) {
+        AppStage.NEW -> R.id.splashFragment to NoRequirementArgs(source).toBundle()
+        AppStage.ON_BOARDING -> R.id.onboardingFragment to NoRequirementArgs(source).toBundle()
+        AppStage.ESTABLISHED -> R.id.homeFragment to NoRequirementArgs(source).toBundle()
+    }
+    val navOptions = navOptions { popUpTo(R.id.navigation_main) {} }
+    findNavController().navigate(destination.first, destination.second, navOptions)
+}
+
+//Screens
+
+private fun Fragment.navigateToOnboarding(source: Source){
+    navigate(R.id.onboardingFragment, NoRequirementArgs(source))
+}
+
+private fun Fragment.navigateToHome(source: Source){
+    navigate(R.id.homeFragment, NoRequirementArgs(source))
+}

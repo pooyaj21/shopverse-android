@@ -9,6 +9,9 @@ androidxSecurityCrypto = "1.1.0-alpha06"
 androidxAppcompat = "1.7.0"
 androidxConstraintlayout = "2.2.0"
 androidMaterial = "1.12.0"
+lottie = "6.5.2"
+androidxNavigation = "2.8.4"
+drawabletoolbox = "1.0.7"
 
 # Gradle-plugin classpath used by the convention build-logic.
 android-gradle-plugin = "8.7.3"
@@ -45,3 +48,12 @@ androidx-security-crypto = { module = "androidx.security:security-crypto", versi
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppcompat" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidxConstraintlayout" }
 android-material = { module = "com.google.android.material:material", version.ref = "androidMaterial" }
+
+# Lottie — JSON-based vector animations (used by splash screen)
+airbnb-lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+
+# AndroidX Navigation (Fragment-based)
+androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidxNavigation" }
+
+# Drawable toolbox
+drawabletoolbox = { group = "com.github.duanhong169", name = "drawabletoolbox", version.ref = "drawabletoolbox" }

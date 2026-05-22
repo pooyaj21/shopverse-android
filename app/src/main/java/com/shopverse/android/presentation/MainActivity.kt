@@ -1,4 +1,4 @@
-package com.shopverse.android
+package com.shopverse.android.presentation
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -13,10 +13,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lockPortrait()
+        setBasic()
         rootView = MainView(activity = this)
         setContentView(rootView)
+        rootView?.setNavigation()
     }
-
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
