@@ -1,3 +1,5 @@
+import java.util.Properties
+
 val SCREEN_ARGS = "screenArgs"
 
 plugins {
@@ -6,6 +8,14 @@ plugins {
     id("kotlin-parcelize")
 }
 
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+val supabaseUrl: String =
+    localProps.getProperty("supabase.url") ?: "https://cxfllbnxuvmeykjvtyeb.supabase.co"
+val supabaseAnonKey: String = localProps.getProperty("supabase.anonKey") ?: ""
+
 android {
     namespace = "com.shopverse.android"
     defaultConfig {
@@ -13,6 +23,8 @@ android {
         versionCode = 1
         versionName = "0.1.0"
         buildConfigField("String", "SCREEN_ARGS", "\"$SCREEN_ARGS\"")
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseAnonKey\"")
     }
     buildTypes {
         getByName("debug") {
@@ -33,6 +45,7 @@ dependencies {
     implementation(libs.android.material)
     implementation(libs.airbnb.lottie)
     implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.recyclerview)
     // Drawable toolbox
     implementation(libs.drawabletoolbox)
 }

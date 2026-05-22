@@ -18,7 +18,7 @@ abstract class BaseFragmentVMState<V : View, Model, VM : BaseViewModelState<Mode
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         @Suppress("UNCHECKED_CAST")
-        (view as? ViewStateRenderer<Model>)?.let { viewRenderer ->
+        (rootView as? ViewStateRenderer<Model>)?.let { viewRenderer ->
             viewModel.viewStateFlow
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.RESUMED)
                 .onEach { viewState ->

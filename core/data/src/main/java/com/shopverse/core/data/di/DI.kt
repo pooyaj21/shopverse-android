@@ -1,5 +1,7 @@
 package com.shopverse.core.data.di
 
+import com.shopverse.core.data.product.ProductRepository
+import com.shopverse.core.data.product.ProductRepositoryImpl
 import com.shopverse.core.preferences.di.preferencesDiModule
 import com.shopverse.core.service.di.serviceDiModule
 import com.shopverse.core.shared.DefaultDispatcherProvider
@@ -10,4 +12,6 @@ val dataDiModule = module {
     includes(serviceDiModule, preferencesDiModule)
 
     single<DispatcherProvider> { DefaultDispatcherProvider() }
+
+    single<ProductRepository> { ProductRepositoryImpl(productService = get()) }
 }
