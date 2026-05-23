@@ -1,11 +1,13 @@
 package com.shopverse.android.presentation.screen.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Paint
 import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.view.isVisible
+import androidx.core.view.setPadding
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.shopverse.android.R
@@ -65,7 +67,7 @@ class ProductCellView(context: Context) : AppVerticalLinearLayout(context) {
             .cornerRadius(IMAGE_CORNER_RADIUS_DP.dp)
             .build()
         clipToOutline = true
-        addView(imageView, AppLayout.Frame.get(AppLayout.MATCH, 150.dp))
+        addView(imageView, AppLayout.Frame.get(AppLayout.MATCH, 175.dp))
         addView(
             discountBadge,
             AppLayout.Frame.wrapContent()
@@ -156,6 +158,7 @@ class ProductCellView(context: Context) : AppVerticalLinearLayout(context) {
         )
     }
 
+    @SuppressLint("SetTextI18n", "DefaultLocale")
     fun bind(product: Product, isInCart: Boolean) {
         imageView.load(product.image) {
             crossfade(true)
@@ -167,7 +170,7 @@ class ProductCellView(context: Context) : AppVerticalLinearLayout(context) {
         val oldPrice = product.oldPrice
         val hasDiscount = oldPrice != null && oldPrice > product.currentPrice
         oldPriceView.isVisible = hasDiscount
-        if (hasDiscount && oldPrice != null) {
+        if (hasDiscount) {
             oldPriceView.text = formatPrice(oldPrice, product.currency)
             val percent = (((oldPrice - product.currentPrice) / oldPrice) * 100).roundToInt()
             discountBadge.text = "-$percent%"
@@ -200,6 +203,7 @@ class ProductCellView(context: Context) : AppVerticalLinearLayout(context) {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun formatPrice(value: Double, currency: String): String {
         val rendered = if (value % 1.0 == 0.0) value.toInt().toString()
         else String.format("%.2f", value)
