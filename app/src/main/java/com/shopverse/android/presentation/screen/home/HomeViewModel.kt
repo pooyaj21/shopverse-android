@@ -1,16 +1,20 @@
 package com.shopverse.android.presentation.screen.home
 
 import androidx.lifecycle.viewModelScope
+import com.shopverse.android.core.cart.CartManager
 import com.shopverse.android.presentation.architecture.BaseViewModelState
 import com.shopverse.android.presentation.architecture.ViewState
 import com.shopverse.core.domain.product.GetProductsUseCase
 import com.shopverse.core.model.PagedResult
 import com.shopverse.core.model.Product
 import com.shopverse.core.shared.AppResult
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val getProducts: GetProductsUseCase,
+    private val cartManager: CartManager,
 ) : BaseViewModelState<HomeUiModel, Unit>(
     initialState = ViewState.Loading(onFrontOfContent = false)
 ) {
@@ -22,6 +26,9 @@ class HomeViewModel(
     private var loading = false
 
     init {
+        cartManager.idsFlow
+            .onEach { ids -> onCartIdsChanged(ids) }
+            .launchIn(viewModelScope)
         refresh()
     }
 
@@ -47,16 +54,7 @@ class HomeViewModel(
                         accumulated.addAll(page.items)
                         nextOffset = page.offset + page.items.size
                         total = page.total
-                        when {
-                            accumulated.isEmpty() -> setEmptyState()
-                            else -> setSuccessState(
-                                HomeUiModel(
-                                    items = accumulated.toList(),
-                                    hasMore = nextOffset < total,
-                                    isAppending = isAppending,
-                                )
-                            )
-                        }
+                        emitSuccessOrEmpty(isAppending = isAppending)
                     }
                     is AppResult.Error -> if (!isAppending) setErrorState(result)
                     // Append failures are silently dropped for now — the next
@@ -66,5 +64,31 @@ class HomeViewModel(
                 loading = false
             }
         }
+    }
+
+    fun addToCart(product: Product) {
+        viewModelScope.launch { cartManager.add(product) }
+    }
+
+    private suspend fun onCartIdsChanged(cartIds: Set<String>) {
+        val current = state
+        if (current is ViewState.Success && current.model.cartIds != cartIds) {
+            setSuccessState(current.model.copy(cartIds = cartIds))
+        }
+    }
+
+    private suspend fun emitSuccessOrEmpty(isAppending: Boolean) {
+        if (accumulated.isEmpty()) {
+            setEmptyState()
+            return
+        }
+        setSuccessState(
+            HomeUiModel(
+                items = accumulated.toList(),
+                cartIds = cartManager.idsFlow.value,
+                hasMore = nextOffset < total,
+                isAppending = isAppending,
+            )
+        )
     }
 }

@@ -48,4 +48,6 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     // Drawable toolbox
     implementation(libs.drawabletoolbox)
+    // Image loading
+    implementation(libs.coil)
 }

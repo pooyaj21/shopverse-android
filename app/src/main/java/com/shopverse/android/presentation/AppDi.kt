@@ -1,6 +1,7 @@
 package com.shopverse.android.presentation
 
 import com.shopverse.android.BuildConfig
+import com.shopverse.android.core.cart.CartManager
 import com.shopverse.android.core.stage.AppStageStore
 import com.shopverse.android.core.stage.AppStageStoreImpl
 import com.shopverse.android.presentation.screen.home.HomeViewModel
@@ -20,7 +21,16 @@ val appDiModule = module {
         )
     }
 
+    single {
+        CartManager(
+            selectAllProductInCart = get(),
+            insertOrUpdateProductToCart = get(),
+            deleteProductFromCart = get(),
+        )
+    }
+
+    viewModel { MainViewModel() }
     viewModel { SplashViewModel(appStageStore = get()) }
     viewModel { OnboardingViewModel(appStageStore = get()) }
-    viewModel { HomeViewModel(getProducts = get()) }
+    viewModel { HomeViewModel(getProducts = get(), cartManager = get()) }
 }

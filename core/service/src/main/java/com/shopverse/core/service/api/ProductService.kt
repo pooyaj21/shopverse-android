@@ -23,7 +23,6 @@ class ProductServiceImpl(
         client.get(
             path = "products",
             query = mapOf(
-                "select" to "id,slug,title,cover_image_url,current_price,currency",
                 "order" to "release_date.desc",
                 "limit" to limit.toString(),
                 "offset" to offset.toString(),
