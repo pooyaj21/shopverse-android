@@ -48,7 +48,7 @@ abstract class BaseView(context: Context) : FrameLayout(context) {
     @SuppressLint("ViewConstructor")
     abstract class State<Model>(
         context: Context,
-        final override val onRetryClickListener: OnClickListener
+        final override val onRetryClickListener:() -> Unit
     ) : BaseView(context), ViewStateRenderer<Model> {
 
         private val progressView = ProgressBar(context).apply {
@@ -61,7 +61,7 @@ abstract class BaseView(context: Context) : FrameLayout(context) {
             setTypography(Typography.R16)
             setTextColor(AppColorProvider.gray)
             setPadding(horizontal = 24.dp, vertical = 24.dp)
-            setOnClickListener { onRetryClickListener.onClick(it) }
+            setOnClickListener { onRetryClickListener() }
         }
 
         protected open val emptyMessage: String = "Nothing here yet."

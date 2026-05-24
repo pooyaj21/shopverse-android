@@ -21,6 +21,9 @@ class CartManager(
     private val mutableIdsFlow = MutableStateFlow<Set<String>>(emptySet())
     val idsFlow: StateFlow<Set<String>> = mutableIdsFlow.asStateFlow()
 
+    private val mutableItemsFlow = MutableStateFlow<List<LocalCartItem>>(emptyList())
+    val itemsFlow: StateFlow<List<LocalCartItem>> = mutableItemsFlow.asStateFlow()
+
     private fun checkInit() {
         check(isInitialized) { "First call CartManager.init() at application initialization" }
     }
@@ -50,6 +53,7 @@ class CartManager(
 
     private fun publish() {
         mutableIdsFlow.value = items.keys.toSet()
+        mutableItemsFlow.value = items.values.toList()
     }
 
     fun isProductInCart(product: Product): Boolean {

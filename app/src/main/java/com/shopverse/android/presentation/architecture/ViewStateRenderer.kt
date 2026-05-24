@@ -1,9 +1,7 @@
 package com.shopverse.android.presentation.architecture
 
-import android.view.View
-
 interface ViewStateRenderer<Model> {
-    val onRetryClickListener: View.OnClickListener
+    val onRetryClickListener: () -> Unit
     fun onLoading(onFrontOfContent: Boolean)
     fun onLocalError(message: String?, cause: Throwable?)
     fun onRemoteError(httpCode: Int, message: String?)

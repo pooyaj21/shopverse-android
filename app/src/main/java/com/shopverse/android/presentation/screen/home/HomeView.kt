@@ -19,7 +19,7 @@ class HomeView(
     onProductClickListener: (Product) -> Unit,
     onAddToCartClickListener: (Product) -> Unit,
     onCartClickListener: () -> Unit,
-    onRetryClickListener: OnClickListener,
+    onRetryClickListener: () -> Unit,
 ) : BaseView.State<HomeUiModel>(context, onRetryClickListener) {
 
     private val dims = productCellDimension.dimensions(Screen.size.width - (GRID_EDGE_DP.dp * 2))
