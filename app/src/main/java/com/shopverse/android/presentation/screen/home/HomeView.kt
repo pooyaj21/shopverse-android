@@ -2,13 +2,14 @@ package com.shopverse.android.presentation.screen.home
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Rect
-import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.shopverse.android.core.Screen
 import com.shopverse.android.core.extension.dp
+import com.shopverse.android.core.recycler.RecyclerViewDecorations
 import com.shopverse.android.presentation.architecture.BaseView
 import com.shopverse.android.presentation.feature.prodcutList.ProductAdapter
+import com.shopverse.android.presentation.feature.prodcutList.productCellDimension
 import com.shopverse.core.model.Product
 
 @SuppressLint("ViewConstructor")
@@ -21,12 +22,15 @@ class HomeView(
     onRetryClickListener: OnClickListener,
 ) : BaseView.State<HomeUiModel>(context, onRetryClickListener) {
 
+    private val dims = productCellDimension.dimensions(Screen.size.width - (GRID_EDGE_DP.dp * 2))
+
     private val productAdapter = ProductAdapter(
+        dims = dims,
         onProductClickListener = onProductClickListener,
         onAddToCartClickListener = onAddToCartClickListener,
         onCartClickListener = onCartClickListener,
     )
-    private val layoutManager = GridLayoutManager(context, GRID_SPAN_COUNT)
+    private val layoutManager = GridLayoutManager(context, dims.cols)
 
     private var hasMore: Boolean = false
 
@@ -37,11 +41,14 @@ class HomeView(
         "Couldn't load products ($httpCode). Tap to retry."
 
     private val recyclerView = RecyclerView(context).apply {
-        layoutManager = this@HomeView.layoutManager
-        adapter = productAdapter
+        addItemDecoration(
+            RecyclerViewDecorations.GridSpacingItemDecoration(
+                spacing = dims.spacing,
+            )
+        )
+        setPaddingRelative(GRID_EDGE_DP.dp, 0, GRID_EDGE_DP.dp, 20.dp)
         clipToPadding = false
-        setPadding(GRID_EDGE_DP.dp, GRID_EDGE_DP.dp, GRID_EDGE_DP.dp, GRID_EDGE_DP.dp)
-        addItemDecoration(GridSpacingDecoration(GRID_SPAN_COUNT, GRID_GAP_DP.dp))
+        layoutManager = this@HomeView.layoutManager
         addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
                 if (dy <= 0 || !hasMore) return
@@ -50,6 +57,7 @@ class HomeView(
                 if (lastVisible >= total - PREFETCH_THRESHOLD) onLoadMore()
             }
         })
+        adapter = productAdapter
     }
 
     init {
@@ -65,29 +73,8 @@ class HomeView(
         hasMore = false
     }
 
-    private class GridSpacingDecoration(
-        private val spanCount: Int,
-        private val gap: Int,
-    ) : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State,
-        ) {
-            val position = parent.getChildAdapterPosition(view)
-            if (position == RecyclerView.NO_POSITION) return
-            val column = position % spanCount
-            outRect.left = column * gap / spanCount
-            outRect.right = gap - (column + 1) * gap / spanCount
-            if (position >= spanCount) outRect.top = gap
-        }
-    }
-
     companion object {
         private const val PREFETCH_THRESHOLD = 4
-        private const val GRID_SPAN_COUNT = 2
-        private const val GRID_GAP_DP = 12
         private const val GRID_EDGE_DP = 12
     }
 }

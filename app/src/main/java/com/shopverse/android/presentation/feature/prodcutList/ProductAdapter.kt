@@ -4,11 +4,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.shopverse.android.core.extension.dp
+import com.shopverse.android.core.layout.AppCellDimension
 import com.shopverse.android.core.layout.AppLayout
 import com.shopverse.core.model.Product
 
 class ProductAdapter(
+    private val dims: AppCellDimension.Dimension,
     private val onProductClickListener: (Product) -> Unit,
     private val onAddToCartClickListener: (Product) -> Unit,
     private val onCartClickListener: () -> Unit
@@ -24,9 +25,7 @@ class ProductAdapter(
             },
             onCartClickListener = onCartClickListener
         ).apply {
-            layoutParams = AppLayout.Recycler.get(AppLayout.MATCH, AppLayout.WRAP).apply {
-                bottomMargin = 12.dp
-            }
+            layoutParams = AppLayout.Recycler.get(dims.size.width, dims.size.height)
         }
         return ProductViewHolder(cell)
     }
