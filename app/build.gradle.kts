@@ -50,4 +50,7 @@ dependencies {
     implementation(libs.drawabletoolbox)
     // Image loading
     implementation(libs.coil)
+    // RxJava 2 + RxAndroid
+    implementation(libs.rxjava)
+    implementation(libs.rxandroid)
 }

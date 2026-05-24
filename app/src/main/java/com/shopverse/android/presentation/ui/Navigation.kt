@@ -34,7 +34,7 @@ fun Fragment.navigateAndClearStack(appStage: AppStage, source: Source) {
     val destination: Pair<Int, Bundle> = when (appStage) {
         AppStage.NEW -> R.id.splashFragment to NoRequirementArgs(source).toBundle()
         AppStage.ON_BOARDING -> R.id.onboardingFragment to NoRequirementArgs(source).toBundle()
-        AppStage.ESTABLISHED -> R.id.homeFragment to NoRequirementArgs(source).toBundle()
+        AppStage.ESTABLISHED -> R.id.navigatorFragment to NoRequirementArgs(source).toBundle()
     }
     val navOptions = navOptions { popUpTo(R.id.navigation_main) {} }
     findNavController().navigate(destination.first, destination.second, navOptions)
@@ -42,10 +42,10 @@ fun Fragment.navigateAndClearStack(appStage: AppStage, source: Source) {
 
 //Screens
 
-private fun Fragment.navigateToOnboarding(source: Source){
+private fun Fragment.navigateToOnboarding(source: Source) {
     navigate(R.id.onboardingFragment, NoRequirementArgs(source))
 }
 
-private fun Fragment.navigateToHome(source: Source){
-    navigate(R.id.homeFragment, NoRequirementArgs(source))
+private fun Fragment.navigateToNavigator(source: Source) {
+    navigate(R.id.navigatorFragment, NoRequirementArgs(source))
 }

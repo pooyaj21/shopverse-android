@@ -5,6 +5,7 @@ import com.shopverse.android.core.cart.CartManager
 import com.shopverse.android.core.stage.AppStageStore
 import com.shopverse.android.core.stage.AppStageStoreImpl
 import com.shopverse.android.presentation.screen.home.HomeViewModel
+import com.shopverse.android.presentation.screen.navigator.NavigatorViewModel
 import com.shopverse.android.presentation.screen.onboarding.OnboardingViewModel
 import com.shopverse.android.presentation.screen.splash.SplashViewModel
 import com.shopverse.core.service.supabase.SupabaseConfig
@@ -32,5 +33,6 @@ val appDiModule = module {
     viewModel { MainViewModel() }
     viewModel { SplashViewModel(appStageStore = get()) }
     viewModel { OnboardingViewModel(appStageStore = get()) }
+    viewModel { NavigatorViewModel() }
     viewModel { HomeViewModel(getProducts = get(), cartManager = get()) }
 }
