@@ -46,7 +46,7 @@ class HomeView(
                 spacing = dims.spacing,
             )
         )
-        setPaddingRelative(GRID_EDGE_DP.dp, 0, GRID_EDGE_DP.dp, 20.dp)
+        setPaddingRelative(GRID_EDGE_DP.dp, 0, GRID_EDGE_DP.dp, 50.dp)
         clipToPadding = false
         layoutManager = this@HomeView.layoutManager
         addOnScrollListener(object : RecyclerView.OnScrollListener() {
