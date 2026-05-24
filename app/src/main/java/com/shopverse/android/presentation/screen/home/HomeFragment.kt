@@ -21,8 +21,9 @@ class HomeFragment : BaseFragmentVMState<HomeView, HomeUiModel, HomeViewModel>()
     ): HomeView = HomeView(
         context = requireContext(),
         onLoadMore = { viewModel.loadMore() },
-        onAddToCart = { product -> viewModel.addToCart(product) },
-        onOpenCart = { notImplementedYet() },
+        onProductClickListener = { notImplementedYet() },
+        onAddToCartClickListener = { product -> viewModel.addToCart(product) },
+        onCartClickListener = { notImplementedYet() },
         onRetryClickListener = { viewModel.refresh() },
     )
 }

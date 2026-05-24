@@ -15,14 +15,16 @@ import com.shopverse.core.model.Product
 class HomeView(
     context: Context,
     val onLoadMore: () -> Unit,
-    onAddToCart: (Product) -> Unit,
-    onOpenCart: () -> Unit,
+    onProductClickListener: (Product) -> Unit,
+    onAddToCartClickListener: (Product) -> Unit,
+    onCartClickListener: () -> Unit,
     onRetryClickListener: OnClickListener,
 ) : BaseView.State<HomeUiModel>(context, onRetryClickListener) {
 
     private val productAdapter = ProductAdapter(
-        onAddToCartClickListener = onAddToCart,
-        onCartClickListener = onOpenCart,
+        onProductClickListener = onProductClickListener,
+        onAddToCartClickListener = onAddToCartClickListener,
+        onCartClickListener = onCartClickListener,
     )
     private val layoutManager = GridLayoutManager(context, GRID_SPAN_COUNT)
 

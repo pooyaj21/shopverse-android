@@ -9,6 +9,7 @@ import com.shopverse.android.core.layout.AppLayout
 import com.shopverse.core.model.Product
 
 class ProductAdapter(
+    private val onProductClickListener: (Product) -> Unit,
     private val onAddToCartClickListener: (Product) -> Unit,
     private val onCartClickListener: () -> Unit
 ) : ListAdapter<Product, ProductAdapter.ProductViewHolder>(DIFF) {
@@ -16,6 +17,7 @@ class ProductAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val cell = ProductCellView(
             context = parent.context,
+            onProductClickListener = onProductClickListener,
             onAddToCartClickListener = {
                 onAddToCartClickListener(it)
                 notifyDataSetChanged()

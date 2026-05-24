@@ -34,6 +34,7 @@ import kotlin.math.roundToInt
 @SuppressLint("ViewConstructor")
 class ProductCellView(
     context: Context,
+    private val onProductClickListener: (Product) -> Unit,
     private val onAddToCartClickListener: (Product) -> Unit,
     private val onCartClickListener: () -> Unit
 ) : AppVerticalLinearLayout(context) {
@@ -189,6 +190,8 @@ class ProductCellView(
             ratingRow.isVisible = false
         }
         actionButton.bind(product)
+
+        setOnClickListener { onProductClickListener(product) }
     }
 
 
