@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.shopverse.android.core.extension.dp
 import com.shopverse.android.presentation.architecture.BaseView
+import com.shopverse.android.presentation.feature.prodcutList.ProductAdapter
 import com.shopverse.core.model.Product
 
 @SuppressLint("ViewConstructor")
@@ -20,8 +21,8 @@ class HomeView(
 ) : BaseView.State<HomeUiModel>(context, onRetryClickListener) {
 
     private val productAdapter = ProductAdapter(
-        onAddToCart = onAddToCart,
-        onOpenCart = onOpenCart,
+        onAddToCartClickListener = onAddToCart,
+        onCartClickListener = onOpenCart,
     )
     private val layoutManager = GridLayoutManager(context, GRID_SPAN_COUNT)
 
@@ -55,7 +56,7 @@ class HomeView(
 
     override fun renderSuccess(model: HomeUiModel) {
         hasMore = model.hasMore
-        productAdapter.submit(items = model.items, cartIds = model.cartIds)
+        productAdapter.submitList(model.items)
     }
 
     override fun onContentReset() {

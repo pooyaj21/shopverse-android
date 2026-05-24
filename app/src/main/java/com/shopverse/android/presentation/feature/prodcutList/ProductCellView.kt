@@ -1,7 +1,8 @@
-package com.shopverse.android.presentation.screen.home
+package com.shopverse.android.presentation.feature.prodcutList
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Paint
 import android.view.Gravity
 import android.widget.FrameLayout
@@ -11,8 +12,6 @@ import androidx.core.view.setPadding
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.shopverse.android.R
-import com.shopverse.android.core.animation.AnimationType
-import com.shopverse.android.core.animation.addAnimate
 import com.shopverse.android.core.color.AppColorProvider
 import com.shopverse.android.core.drawable.DrawableBuilder
 import com.shopverse.android.core.extension.applyMaxLine
@@ -27,17 +26,20 @@ import com.shopverse.android.core.layout.margin
 import com.shopverse.android.core.typography.Typography
 import com.shopverse.android.core.ui.AppHorizontalLinearLayout
 import com.shopverse.android.core.ui.AppVerticalLinearLayout
+import com.shopverse.android.presentation.component.AppQuantitySelector
 import com.shopverse.android.presentation.component.AppTextView
 import com.shopverse.core.model.Product
 import kotlin.math.roundToInt
 
-class ProductCellView(context: Context) : AppVerticalLinearLayout(context) {
-
-    var onAddClick: (() -> Unit)? = null
-    var onCartClick: (() -> Unit)? = null
+@SuppressLint("ViewConstructor")
+class ProductCellView(
+    context: Context,
+    private val onAddToCartClickListener: (Product) -> Unit,
+    private val onCartClickListener: () -> Unit
+) : AppVerticalLinearLayout(context) {
 
     private val imageView = ImageView(context).apply {
-        scaleType = ImageView.ScaleType.CENTER_CROP
+        scaleType = ImageView.ScaleType.FIT_CENTER
         setBackgroundColor(AppColorProvider.imagePlaceholder)
     }
 
@@ -52,14 +54,11 @@ class ProductCellView(context: Context) : AppVerticalLinearLayout(context) {
         isVisible = false
     }
 
-    private val actionButton = ImageView(context).apply {
-        background = DrawableBuilder(context)
-            .oval()
-            .solidColor(AppColorProvider.buttonFilled)
-            .build()
-        setPadding(8.dp)
-        addAnimate(AnimationType.Scale(0.92F))
-    }
+    private val actionButton = AppQuantitySelector(
+        context = context,
+        onAddToCartClickListener = onAddToCartClickListener,
+        onCartClickListener = onCartClickListener
+    )
 
     private val imageContainer = FrameLayout(context).apply {
         background = DrawableBuilder(context)
@@ -112,7 +111,7 @@ class ProductCellView(context: Context) : AppVerticalLinearLayout(context) {
 
     private val ratingIcon = ImageView(context).apply {
         setImageResource(R.drawable.ic_star)
-        imageTintList = android.content.res.ColorStateList.valueOf(
+        imageTintList = ColorStateList.valueOf(
             AppColorProvider.ratingStar.value(context)
         )
     }
@@ -159,7 +158,7 @@ class ProductCellView(context: Context) : AppVerticalLinearLayout(context) {
     }
 
     @SuppressLint("SetTextI18n", "DefaultLocale")
-    fun bind(product: Product, isInCart: Boolean) {
+    fun bind(product: Product) {
         imageView.load(product.image) {
             crossfade(true)
             transformations(RoundedCornersTransformation(IMAGE_CORNER_RADIUS_DP.dp.toFloat()))
@@ -189,19 +188,9 @@ class ProductCellView(context: Context) : AppVerticalLinearLayout(context) {
         } else {
             ratingRow.isVisible = false
         }
-
-        bindAction(isInCart)
+        actionButton.bind(product)
     }
 
-    private fun bindAction(isInCart: Boolean) {
-        actionButton.setImageResource(if (isInCart) R.drawable.ic_cart else R.drawable.ic_add)
-        actionButton.imageTintList = android.content.res.ColorStateList.valueOf(
-            AppColorProvider.alwaysWhite.value(context)
-        )
-        actionButton.setOnClickListener {
-            if (isInCart) onCartClick?.invoke() else onAddClick?.invoke()
-        }
-    }
 
     @SuppressLint("DefaultLocale")
     private fun formatPrice(value: Double, currency: String): String {
