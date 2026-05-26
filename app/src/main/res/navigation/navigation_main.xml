@@ -13,6 +13,6 @@
     </fragment>
 
     <fragment android:id="@+id/navigatorFragment" android:label="NavigatorFragment" android:name="com.shopverse.android.presentation.screen.navigator.NavigatorFragment">
-        <argument android:name="screenArgs" app:argType="com.shopverse.android.presentation.ui.NoRequirementArgs"/>
+        <argument android:name="screenArgs" app:argType="com.shopverse.android.presentation.screen.navigator.NavigatorScreenArgs"/>
     </fragment>
 </navigation>

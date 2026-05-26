@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.shopverse.android.core.extension.notImplementedYet
 import com.shopverse.android.presentation.architecture.BaseFragmentVMState
+import com.shopverse.android.presentation.screen.navigator.NavigatorScreenArgs
+import com.shopverse.android.presentation.screen.navigator.NavigatorView
 import com.shopverse.android.presentation.ui.Source
+import com.shopverse.android.presentation.ui.navigateToNavigator
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class HomeFragment : BaseFragmentVMState<HomeView, HomeUiModel, HomeViewModel>() {
@@ -23,7 +26,16 @@ class HomeFragment : BaseFragmentVMState<HomeView, HomeUiModel, HomeViewModel>()
         onLoadMore = { viewModel.loadMore() },
         onProductClickListener = { notImplementedYet() },
         onAddToCartClickListener = { product -> viewModel.addToCart(product) },
-        onCartClickListener = { notImplementedYet() },
+        onCartClickListener = {
+            navigateToNavigator(
+                args = NavigatorScreenArgs(
+                    source = currentSource,
+                    requirements = NavigatorScreenArgs.Requirements(
+                        selectTabTag = NavigatorView.TAB_CART
+                    )
+                )
+            )
+        },
         onRetryClickListener = { viewModel.refresh() },
     )
 }

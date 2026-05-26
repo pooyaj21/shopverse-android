@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.shopverse.android.R
 import com.shopverse.android.core.stage.AppStage
+import com.shopverse.android.presentation.screen.navigator.NavigatorScreenArgs
 
 
 private fun Fragment.navigate(
@@ -34,7 +35,10 @@ fun Fragment.navigateAndClearStack(appStage: AppStage, source: Source) {
     val destination: Pair<Int, Bundle> = when (appStage) {
         AppStage.NEW -> R.id.splashFragment to NoRequirementArgs(source).toBundle()
         AppStage.ON_BOARDING -> R.id.onboardingFragment to NoRequirementArgs(source).toBundle()
-        AppStage.ESTABLISHED -> R.id.navigatorFragment to NoRequirementArgs(source).toBundle()
+        AppStage.ESTABLISHED -> R.id.navigatorFragment to NavigatorScreenArgs(
+            source,
+            NavigatorScreenArgs.Requirements()
+        ).toBundle()
     }
     val navOptions = navOptions { popUpTo(R.id.navigation_main) {} }
     findNavController().navigate(destination.first, destination.second, navOptions)
@@ -42,10 +46,10 @@ fun Fragment.navigateAndClearStack(appStage: AppStage, source: Source) {
 
 //Screens
 
-private fun Fragment.navigateToOnboarding(source: Source) {
+fun Fragment.navigateToOnboarding(source: Source) {
     navigate(R.id.onboardingFragment, NoRequirementArgs(source))
 }
 
-private fun Fragment.navigateToNavigator(source: Source) {
-    navigate(R.id.navigatorFragment, NoRequirementArgs(source))
+fun Fragment.navigateToNavigator(args: NavigatorScreenArgs) {
+    navigate(R.id.navigatorFragment, args)
 }

@@ -5,15 +5,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
+import androidx.navigation.fragment.navArgs
 import com.shopverse.android.presentation.architecture.BaseFragmentVM
 import com.shopverse.android.presentation.ui.Source
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.getValue
 
 class NavigatorFragment : BaseFragmentVM<NavigatorView, NavigatorViewModel>() {
 
     override val currentSource: Source get() = Source.Navigator
 
     override val viewModel: NavigatorViewModel by viewModel()
+
+    private val args: NavigatorFragmentArgs by navArgs()
 
     private lateinit var onBackPressCallback: OnBackPressedCallback
 
@@ -28,7 +32,10 @@ class NavigatorFragment : BaseFragmentVM<NavigatorView, NavigatorViewModel>() {
             onTabSelectedListener = { isDefaultTab, _ ->
                 onBackPressCallback.isEnabled = isDefaultTab.not()
             }
-        )
+        ).also { view ->
+            val tabToSelect = args.screenArgs.requirements.selectTabTag
+            if (tabToSelect != NavigatorView.TAB_HOME) view.tabBarView.select(tabToSelect)
+        }
     }
 
 
@@ -38,6 +45,9 @@ class NavigatorFragment : BaseFragmentVM<NavigatorView, NavigatorViewModel>() {
             override fun handleOnBackPressed() {
                 rootView?.tabBarView?.back()
             }
+        }
+        if (args.screenArgs.requirements.withBackStack.not()) {
+            requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressCallback)
         }
     }
 

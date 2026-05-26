@@ -6,6 +6,7 @@ plugins {
     id("app.android.application")
     id("app.koin.android")
     id("kotlin-parcelize")
+    alias(libs.plugins.androidx.navigation.safeargs)
 }
 
 val localProps = Properties().apply {
