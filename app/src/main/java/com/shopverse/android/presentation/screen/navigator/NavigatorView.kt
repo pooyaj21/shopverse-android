@@ -17,6 +17,7 @@ import com.shopverse.android.presentation.component.TabBarCellView
 import com.shopverse.android.presentation.component.TabBarView
 import com.shopverse.android.presentation.screen.cart.CartFragment
 import com.shopverse.android.presentation.screen.home.HomeFragment
+import com.shopverse.android.presentation.screen.profile.ProfileFragment
 import java.util.Stack
 import kotlin.reflect.KClass
 
@@ -30,6 +31,7 @@ class NavigatorView(
     companion object {
         const val TAB_HOME = "tab_home"
         const val TAB_CART = "tab_cart"
+        const val TAB_PROFILE = "tab_profile"
     }
 
     private val tabs: List<TabContainer> = createTabContainerList()
@@ -96,6 +98,14 @@ class NavigatorView(
             view = TabBarCellView(
                 context = context,
                 iconRes = R.drawable.ic_cart
+            )
+        ),
+        TabContainer(
+            tag = TAB_PROFILE,
+            fragmentClass = ProfileFragment::class as KClass<Fragment>,
+            view = TabBarCellView(
+                context = context,
+                iconRes = R.drawable.ic_profile
             )
         ),
     )
