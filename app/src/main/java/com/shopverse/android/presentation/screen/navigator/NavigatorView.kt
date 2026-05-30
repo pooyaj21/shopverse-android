@@ -8,7 +8,9 @@ import android.view.Gravity
 import android.widget.FrameLayout
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.shopverse.android.R
+import com.shopverse.android.core.cart.CartManager
 import com.shopverse.android.core.extension.TAG
 import com.shopverse.android.core.extension.dp
 import com.shopverse.android.core.layout.AppLayout
@@ -18,6 +20,10 @@ import com.shopverse.android.presentation.component.TabBarView
 import com.shopverse.android.presentation.screen.cart.CartFragment
 import com.shopverse.android.presentation.screen.home.HomeFragment
 import com.shopverse.android.presentation.screen.profile.ProfileFragment
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.Stack
 import kotlin.reflect.KClass
 
@@ -26,7 +32,9 @@ class NavigatorView(
     fragment: Fragment,
     private val tabBarBackStack: Stack<TabBarView.Tab>?,
     private val onTabSelectedListener: (isDefaultTab: Boolean, currentTabTag: String) -> Unit,
-) : FrameLayout(fragment.requireContext()) {
+) : FrameLayout(fragment.requireContext()), KoinComponent {
+
+    private val cartManager: CartManager by inject()
 
     companion object {
         const val TAB_HOME = "tab_home"
@@ -78,6 +86,15 @@ class NavigatorView(
             tabBarView,
             AppLayout.Frame.defaultParams().gravity(Gravity.BOTTOM)
         )
+
+        observeCartBadge(fragment)
+    }
+
+    private fun observeCartBadge(fragment: Fragment) {
+        val cartCell = tabs.first { it.tag == TAB_CART }.view
+        cartManager.idsFlow
+            .onEach { cartCell.setBadgeCount(it.size) }
+            .launchIn(fragment.viewLifecycleOwner.lifecycleScope)
     }
 
     fun getBackstack(): Stack<TabBarView.Tab> = tabBarView.getBackStack()
