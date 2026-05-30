@@ -21,6 +21,6 @@ class CartFragment : BaseFragmentVMState<CartView, CartUiModel, CartViewModel>()
     ): CartView = CartView(
         context = requireContext(),
         onRemoveClickListener = { item -> viewModel.removeFromCart(item) },
-        onPlaceOrderClickListener = { notImplementedYet() },
+        onPlaceOrderClickListener = { ensureUserLogin { notImplementedYet() } },
     )
 }

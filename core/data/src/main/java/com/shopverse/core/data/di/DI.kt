@@ -1,5 +1,7 @@
 package com.shopverse.core.data.di
 
+import com.shopverse.core.data.auth.AuthRepository
+import com.shopverse.core.data.auth.AuthRepositoryImpl
 import com.shopverse.core.data.cart.CartRepository
 import com.shopverse.core.data.cart.CartRepositoryImpl
 import com.shopverse.core.data.cart.db.ShopVerseDatabase
@@ -18,6 +20,8 @@ val dataDiModule = module {
     single<DispatcherProvider> { DefaultDispatcherProvider() }
 
     single<ProductRepository> { ProductRepositoryImpl(productService = get()) }
+
+    single<AuthRepository> { AuthRepositoryImpl(authService = get(), sharedPref = get()) }
 
     single { ShopVerseDatabase.build(androidContext()) }
     single { get<ShopVerseDatabase>().cartDao() }

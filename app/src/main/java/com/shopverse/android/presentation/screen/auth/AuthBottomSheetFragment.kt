@@ -1,11 +1,11 @@
 package com.shopverse.android.presentation.screen.auth
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.FragmentManager
 import com.shopverse.android.core.layout.AppLayout
 import com.shopverse.android.presentation.architecture.BaseBottomSheetDialogFragmentVMState
 import com.shopverse.android.presentation.ui.Source
@@ -22,6 +22,10 @@ class AuthBottomSheetFragment : BaseBottomSheetDialogFragmentVMState<
     override val viewModel: AuthBottomSheetViewModel by viewModel()
 
     override fun getDialogHeight(): Int = AppLayout.WRAP
+
+    private var onLoginFailListener: (() -> Unit)? = null
+    private var onLoginSuccessListener: (() -> Unit)? = null
+    private var authSucceeded: Boolean = false
 
     override fun onCreateContainerView(
         inflater: LayoutInflater,
@@ -45,17 +49,28 @@ class AuthBottomSheetFragment : BaseBottomSheetDialogFragmentVMState<
                     effect.message,
                     Toast.LENGTH_SHORT,
                 ).show()
-                AuthBottomSheetViewModel.Effect.AuthCompleted -> dismiss()
+
+                AuthBottomSheetViewModel.Effect.AuthCompleted -> {
+                    authSucceeded = true
+                    onLoginSuccessListener?.invoke()
+                    dismiss()
+                }
             }
         }
     }
 
-    companion object {
-        private const val TAG = "AuthBottomSheetFragment"
+    override fun onDismiss(dialog: DialogInterface) {
+        if (!authSucceeded) onLoginFailListener?.invoke()
+        super.onDismiss(dialog)
+    }
 
-        fun show(fragmentManager: FragmentManager) {
-            if (fragmentManager.findFragmentByTag(TAG) != null) return
-            AuthBottomSheetFragment().show(fragmentManager, TAG)
+    companion object {
+        fun newInstance(
+            onLoginFailListener: () -> Unit,
+            onLoginSuccessListener: () -> Unit,
+        ): AuthBottomSheetFragment = AuthBottomSheetFragment().apply {
+            this.onLoginFailListener = onLoginFailListener
+            this.onLoginSuccessListener = onLoginSuccessListener
         }
     }
 }

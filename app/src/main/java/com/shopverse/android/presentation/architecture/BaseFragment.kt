@@ -20,16 +20,23 @@ import com.shopverse.android.core.extension.isDarkModeOn
 import com.shopverse.android.core.extension.setBackgroundColor
 import com.shopverse.android.core.layout.AppLayout
 import com.shopverse.android.core.ui.AppVerticalLinearLayout
+import com.shopverse.android.presentation.screen.auth.AuthBottomSheetFragment
 import com.shopverse.android.presentation.ui.Source
+import com.shopverse.core.domain.auth.GetSavedProfileUseCase
+import org.koin.android.ext.android.inject
 
 
-abstract class BaseFragment<V : View> : Fragment() {
+abstract class BaseFragment<V : View> : Fragment(), BaseBottomSheetDialogFragment.OnDismissListener {
 
     private var statusBar: View? = null
     protected var rootView: V? = null
     private var navBar: View? = null
 
     protected abstract val currentSource: Source
+
+    private val getSavedProfileUseCase: GetSavedProfileUseCase by inject()
+
+    private var loginDialog: AuthBottomSheetFragment? = null
 
     final override fun onCreateView(
         inflater: LayoutInflater,
@@ -173,5 +180,33 @@ abstract class BaseFragment<V : View> : Fragment() {
     protected fun fullScreen() {
         removeStatusBar()
         removeNavBar()
+    }
+
+    protected val isLogin: Boolean get() = getSavedProfileUseCase() != null
+
+    protected fun ensureUserLogin(
+        doAfterDismissWithoutLogin: (() -> Unit)? = null,
+        doAfterLogin: (alreadyLoggedIn: Boolean) -> Unit,
+    ) {
+        if (isLogin) {
+            doAfterLogin.invoke(true)
+            return
+        }
+        if (loginDialog != null) return
+        loginDialog = AuthBottomSheetFragment.newInstance(
+            onLoginFailListener = {
+                doAfterDismissWithoutLogin?.invoke()
+            },
+            onLoginSuccessListener = {
+                doAfterLogin(false)
+            },
+        ).also {
+            it.show(childFragmentManager, null)
+        }
+    }
+
+    @CallSuper
+    override fun onDialogFragmentDismissed() {
+        loginDialog = null
     }
 }

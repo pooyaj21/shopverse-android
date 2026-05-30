@@ -9,6 +9,7 @@ import com.shopverse.android.presentation.screen.cart.CartViewModel
 import com.shopverse.android.presentation.screen.home.HomeViewModel
 import com.shopverse.android.presentation.screen.navigator.NavigatorViewModel
 import com.shopverse.android.presentation.screen.onboarding.OnboardingViewModel
+import com.shopverse.android.presentation.screen.profile.ProfileViewModel
 import com.shopverse.android.presentation.screen.splash.SplashViewModel
 import com.shopverse.core.service.supabase.SupabaseConfig
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -38,5 +39,13 @@ val appDiModule = module {
     viewModel { NavigatorViewModel() }
     viewModel { HomeViewModel(getProducts = get(), cartManager = get()) }
     viewModel { CartViewModel(cartManager = get()) }
-    viewModel { AuthBottomSheetViewModel(authService = get()) }
+    viewModel { AuthBottomSheetViewModel(loginUseCase = get(), signUpUseCase = get()) }
+    viewModel {
+        ProfileViewModel(
+            getSavedProfileUseCase = get(),
+            logoutUseCase = get(),
+            appVersion = BuildConfig.VERSION_NAME,
+            appBuildNumber = BuildConfig.VERSION_CODE.toString(),
+        )
+    }
 }

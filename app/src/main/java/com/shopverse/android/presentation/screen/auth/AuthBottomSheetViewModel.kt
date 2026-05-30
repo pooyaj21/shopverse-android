@@ -3,12 +3,14 @@ package com.shopverse.android.presentation.screen.auth
 import androidx.lifecycle.viewModelScope
 import com.shopverse.android.presentation.architecture.BaseViewModelState
 import com.shopverse.android.presentation.architecture.ViewState
-import com.shopverse.core.service.api.AuthService
+import com.shopverse.core.domain.auth.LoginUseCase
+import com.shopverse.core.domain.auth.SignUpUseCase
 import com.shopverse.core.shared.AppResult
 import kotlinx.coroutines.launch
 
 class AuthBottomSheetViewModel(
-    private val authService: AuthService,
+    private val loginUseCase: LoginUseCase,
+    private val signUpUseCase: SignUpUseCase,
 ) : BaseViewModelState<AuthBottomSheetUiModel, AuthBottomSheetViewModel.Effect>(
     initialState = ViewState.Success(
         AuthBottomSheetUiModel(mode = AuthMode.Login, isSubmitting = false)
@@ -40,8 +42,8 @@ class AuthBottomSheetViewModel(
         viewModelScope.launch {
             setSuccessState(currentModel.copy(isSubmitting = true))
             val result = when (currentModel.mode) {
-                AuthMode.Login -> authService.login(email = email, password = password)
-                AuthMode.Register -> authService.signUp(
+                AuthMode.Login -> loginUseCase(email = email, password = password)
+                AuthMode.Register -> signUpUseCase(
                     name = name,
                     email = email,
                     password = password,
