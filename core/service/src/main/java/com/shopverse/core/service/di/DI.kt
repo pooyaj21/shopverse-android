@@ -1,5 +1,7 @@
 package com.shopverse.core.service.di
 
+import com.shopverse.core.service.api.AuthService
+import com.shopverse.core.service.api.AuthServiceImpl
 import com.shopverse.core.service.api.ProductService
 import com.shopverse.core.service.api.ProductServiceImpl
 import com.shopverse.core.service.supabase.SupabaseClient
@@ -34,4 +36,6 @@ val serviceDiModule = module {
     single { SupabaseClient(config = get<SupabaseConfig>(), httpClient = get()) }
 
     single<ProductService> { ProductServiceImpl(client = get(), json = get()) }
+
+    single<AuthService> { AuthServiceImpl(client = get(), json = get()) }
 }

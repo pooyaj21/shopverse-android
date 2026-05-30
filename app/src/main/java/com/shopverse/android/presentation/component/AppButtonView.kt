@@ -37,10 +37,11 @@ open class AppButtonView(context: Context) : AppHorizontalLinearLayout(context) 
             .cornerRadius(12.dp)
             .build()
         addView(textView, AppLayout.Linear.wrapContent())
+        isEnabled = true
     }
 
     override fun setEnabled(enabled: Boolean) {
-        textView.setTextColor(if (enabled) AppColorProvider.black else AppColorProvider.gray)
+        textView.setTextColor(if (enabled) AppColorProvider.white else AppColorProvider.gray)
     }
 
     class OutLine(context: Context) : AppButtonView(context) {

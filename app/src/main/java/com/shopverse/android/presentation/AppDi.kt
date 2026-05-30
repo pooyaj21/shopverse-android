@@ -4,6 +4,7 @@ import com.shopverse.android.BuildConfig
 import com.shopverse.android.core.cart.CartManager
 import com.shopverse.android.core.stage.AppStageStore
 import com.shopverse.android.core.stage.AppStageStoreImpl
+import com.shopverse.android.presentation.screen.auth.AuthBottomSheetViewModel
 import com.shopverse.android.presentation.screen.cart.CartViewModel
 import com.shopverse.android.presentation.screen.home.HomeViewModel
 import com.shopverse.android.presentation.screen.navigator.NavigatorViewModel
@@ -37,4 +38,5 @@ val appDiModule = module {
     viewModel { NavigatorViewModel() }
     viewModel { HomeViewModel(getProducts = get(), cartManager = get()) }
     viewModel { CartViewModel(cartManager = get()) }
+    viewModel { AuthBottomSheetViewModel(authService = get()) }
 }
