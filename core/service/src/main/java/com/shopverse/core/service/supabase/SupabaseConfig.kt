@@ -6,4 +6,5 @@ data class SupabaseConfig(
 ) {
     val restUrl: String get() = "$baseUrl/rest/v1"
     val authUrl: String get() = "$baseUrl/auth/v1"
+    val functionsUrl: String get() = "$baseUrl/functions/v1"
 }

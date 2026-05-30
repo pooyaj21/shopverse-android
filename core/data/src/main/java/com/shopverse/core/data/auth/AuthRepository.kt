@@ -5,7 +5,6 @@ import com.shopverse.core.preferences.SharedPref
 import com.shopverse.core.service.api.AuthService
 import com.shopverse.core.service.api.dto.AuthSessionDto
 import com.shopverse.core.shared.AppResult
-import com.shopverse.core.shared.mapIfSuccess
 
 interface AuthRepository {
     suspend fun login(email: String, password: String): AppResult<UserProfile>
@@ -27,20 +26,17 @@ class AuthRepositoryImpl(
 ) : AuthRepository {
 
     override suspend fun login(email: String, password: String): AppResult<UserProfile> =
-        authService.login(email = email, password = password)
-            .also { it.persistTokens() }
-            .mapIfSuccess { it.toProfileAndStoreIfAbsent() }
+        persistAndMap(authService.login(email = email, password = password))
 
     override suspend fun signUp(
         name: String,
         email: String,
         password: String,
     ): AppResult<UserProfile> =
-        authService.signUp(name = name, email = email, password = password)
-            .also { it.persistTokens() }
-            .mapIfSuccess { it.toProfileAndStoreIfAbsent() }
+        persistAndMap(authService.signUp(name = name, email = email, password = password))
 
     override fun getSavedProfile(): UserProfile? {
+        if (getAccessToken().isNullOrBlank()) return null
         val id = sharedPref.read(KEY_PROFILE_ID, null) ?: return null
         return UserProfile(
             id = id,
@@ -59,24 +55,42 @@ class AuthRepositoryImpl(
         sharedPref.remove(KEY_PROFILE_EMAIL)
     }
 
-    private fun AppResult<AuthSessionDto>.persistTokens() {
-        val dto = (this as? AppResult.Success)?.value ?: return
-        sharedPref.write(KEY_ACCESS_TOKEN, dto.accessToken)
-        dto.refreshToken?.let { sharedPref.write(KEY_REFRESH_TOKEN, it) }
-    }
-
-    private fun AuthSessionDto.toProfileAndStoreIfAbsent(): UserProfile {
-        val user = checkNotNull(user) { "Supabase auth response missing user" }
-        val profile = UserProfile(
-            id = user.id,
-            name = user.metadata?.name,
-            email = user.email,
-        )
-        if (sharedPref.read(KEY_PROFILE_ID, null) == null) {
-            sharedPref.write(KEY_PROFILE_ID, profile.id)
-            profile.name?.let { sharedPref.write(KEY_PROFILE_NAME, it) }
-            profile.email?.let { sharedPref.write(KEY_PROFILE_EMAIL, it) }
+    private fun persistAndMap(result: AppResult<AuthSessionDto>): AppResult<UserProfile> =
+        when (result) {
+            is AppResult.Success -> {
+                val dto = result.value
+                val accessToken = dto.accessToken
+                val user = dto.user
+                if (accessToken.isNullOrBlank() || user == null) {
+                    // Supabase returned no session (e.g. signup that requires email confirmation).
+                    // Treat as a remote error so the caller can surface a clear message.
+                    AppResult.Error.Remote(
+                        httpCode = 200,
+                        message = "email_confirmation_required",
+                        cause = null,
+                    )
+                } else {
+                    persistSession(accessToken, dto.refreshToken, user.id, user.metadata?.name, user.email)
+                    AppResult.Success(
+                        UserProfile(id = user.id, name = user.metadata?.name, email = user.email)
+                    )
+                }
+            }
+            is AppResult.Error.Local -> result
+            is AppResult.Error.Remote -> result
         }
-        return profile
+
+    private fun persistSession(
+        accessToken: String,
+        refreshToken: String?,
+        userId: String,
+        userName: String?,
+        userEmail: String?,
+    ) {
+        sharedPref.write(KEY_ACCESS_TOKEN, accessToken)
+        if (refreshToken != null) sharedPref.write(KEY_REFRESH_TOKEN, refreshToken)
+        sharedPref.write(KEY_PROFILE_ID, userId)
+        if (userName != null) sharedPref.write(KEY_PROFILE_NAME, userName)
+        if (userEmail != null) sharedPref.write(KEY_PROFILE_EMAIL, userEmail)
     }
 }

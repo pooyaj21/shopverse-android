@@ -88,6 +88,8 @@ class AuthBottomSheetViewModel(
                 "An account with this email already exists."
             message.contains("weak_password", ignoreCase = true) ->
                 "Password is too weak. Use at least 6 characters."
+            message.contains("email_confirmation_required", ignoreCase = true) ->
+                "Check your email to confirm your account, then log in."
             else -> "Something went wrong ($httpCode)."
         }
     }

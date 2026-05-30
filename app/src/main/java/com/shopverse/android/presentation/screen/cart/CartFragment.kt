@@ -2,8 +2,9 @@ package com.shopverse.android.presentation.screen.cart
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import com.shopverse.android.core.extension.notImplementedYet
+import android.widget.Toast
 import com.shopverse.android.presentation.architecture.BaseFragmentVMState
 import com.shopverse.android.presentation.ui.Source
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -21,6 +22,24 @@ class CartFragment : BaseFragmentVMState<CartView, CartUiModel, CartViewModel>()
     ): CartView = CartView(
         context = requireContext(),
         onRemoveClickListener = { item -> viewModel.removeFromCart(item) },
-        onPlaceOrderClickListener = { ensureUserLogin { notImplementedYet() } },
+        onPlaceOrderClickListener = { ensureUserLogin { viewModel.placeOrder() } },
     )
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        onEffect<CartViewModel.Effect> { effect ->
+            when (effect) {
+                is CartViewModel.Effect.OrderPlaced -> Toast.makeText(
+                    requireContext(),
+                    "Order placed!",
+                    Toast.LENGTH_SHORT,
+                ).show()
+                is CartViewModel.Effect.ShowMessage -> Toast.makeText(
+                    requireContext(),
+                    effect.message,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+        }
+    }
 }

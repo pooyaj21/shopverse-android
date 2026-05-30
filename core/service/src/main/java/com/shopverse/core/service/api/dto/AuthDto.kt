@@ -23,7 +23,7 @@ data class LoginRequestDto(
 
 @Serializable
 data class AuthSessionDto(
-    @SerialName("access_token") val accessToken: String,
+    @SerialName("access_token") val accessToken: String? = null,
     @SerialName("refresh_token") val refreshToken: String? = null,
     @SerialName("token_type") val tokenType: String? = null,
     @SerialName("expires_in") val expiresIn: Long? = null,

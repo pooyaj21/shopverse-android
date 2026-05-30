@@ -30,6 +30,7 @@ val appDiModule = module {
             selectAllProductInCart = get(),
             insertOrUpdateProductToCart = get(),
             deleteProductFromCart = get(),
+            deleteAllProductInCart = get(),
         )
     }
 
@@ -38,7 +39,7 @@ val appDiModule = module {
     viewModel { OnboardingViewModel(appStageStore = get()) }
     viewModel { NavigatorViewModel() }
     viewModel { HomeViewModel(getProducts = get(), cartManager = get()) }
-    viewModel { CartViewModel(cartManager = get()) }
+    viewModel { CartViewModel(cartManager = get(), submitOrderUseCase = get()) }
     viewModel { AuthBottomSheetViewModel(loginUseCase = get(), signUpUseCase = get()) }
     viewModel {
         ProfileViewModel(

@@ -1,5 +1,6 @@
 package com.shopverse.android.core.cart
 
+import com.shopverse.core.domain.cart.DeleteAllProductInCartUseCase
 import com.shopverse.core.domain.cart.DeleteProductFromCartUseCase
 import com.shopverse.core.domain.cart.InsertOrUpdateProductToCartUseCase
 import com.shopverse.core.domain.cart.SelectAllProductInCartUseCase
@@ -13,6 +14,7 @@ class CartManager(
     private val selectAllProductInCart: SelectAllProductInCartUseCase,
     private val insertOrUpdateProductToCart: InsertOrUpdateProductToCartUseCase,
     private val deleteProductFromCart: DeleteProductFromCartUseCase,
+    private val deleteAllProductInCart: DeleteAllProductInCartUseCase,
 ) {
 
     private var isInitialized: Boolean = false
@@ -48,6 +50,14 @@ class CartManager(
         checkInit()
         if (items.remove(productId) == null) return
         deleteProductFromCart(productId = productId)
+        publish()
+    }
+
+    suspend fun clear() {
+        checkInit()
+        if (items.isEmpty()) return
+        items.clear()
+        deleteAllProductInCart()
         publish()
     }
 

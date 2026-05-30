@@ -5,6 +5,8 @@ import com.shopverse.core.data.auth.AuthRepositoryImpl
 import com.shopverse.core.data.cart.CartRepository
 import com.shopverse.core.data.cart.CartRepositoryImpl
 import com.shopverse.core.data.cart.db.ShopVerseDatabase
+import com.shopverse.core.data.order.OrderRepository
+import com.shopverse.core.data.order.OrderRepositoryImpl
 import com.shopverse.core.data.product.ProductRepository
 import com.shopverse.core.data.product.ProductRepositoryImpl
 import com.shopverse.core.preferences.di.preferencesDiModule
@@ -22,6 +24,10 @@ val dataDiModule = module {
     single<ProductRepository> { ProductRepositoryImpl(productService = get()) }
 
     single<AuthRepository> { AuthRepositoryImpl(authService = get(), sharedPref = get()) }
+
+    single<OrderRepository> {
+        OrderRepositoryImpl(orderService = get(), authRepository = get())
+    }
 
     single { ShopVerseDatabase.build(androidContext()) }
     single { get<ShopVerseDatabase>().cartDao() }

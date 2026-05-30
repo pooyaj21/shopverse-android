@@ -52,6 +52,22 @@ class SupabaseClient(
         parse = parse,
     )
 
+    suspend fun <T> functionsPost(
+        path: String,
+        body: String,
+        bearer: String? = null,
+        parse: (body: String, headers: Headers) -> T,
+    ): AppResult<T> = execute(
+        baseUrl = config.functionsUrl,
+        path = path,
+        query = emptyMap(),
+        extraHeaders = emptyMap(),
+        bearer = bearer,
+        body = body,
+        method = HttpMethod.POST,
+        parse = parse,
+    )
+
     private suspend fun <T> execute(
         baseUrl: String,
         path: String,
