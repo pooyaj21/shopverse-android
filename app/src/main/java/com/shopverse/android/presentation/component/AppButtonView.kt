@@ -47,9 +47,8 @@ open class AppButtonView(context: Context) : AppHorizontalLinearLayout(context) 
     class OutLine(context: Context) : AppButtonView(context) {
         init {
             background = DrawableBuilder(context)
-                .strokeWidth(1.dp)
+                .strokeWidth(3.dp)
                 .strokeColor(AppColorProvider.buttonOutline)
-                .solidColor(AppColorProvider.background)
                 .cornerRadius(12.dp)
                 .build()
         }
