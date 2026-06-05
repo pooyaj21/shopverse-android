@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.shopverse.android.core.layout.AppLayout
 import com.shopverse.android.presentation.architecture.BaseBottomSheetDialogFragmentVMState
 import com.shopverse.android.presentation.ui.Source
@@ -42,15 +41,9 @@ class AuthBottomSheetFragment : BaseBottomSheetDialogFragmentVMState<
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onEffect<AuthBottomSheetViewModel.Effect> { effect ->
+        onEffect<AuthBottomSheetEffect> { effect ->
             when (effect) {
-                is AuthBottomSheetViewModel.Effect.ShowMessage -> Toast.makeText(
-                    requireContext(),
-                    effect.message,
-                    Toast.LENGTH_SHORT,
-                ).show()
-
-                AuthBottomSheetViewModel.Effect.AuthCompleted -> {
+                AuthBottomSheetEffect.AuthCompleted -> {
                     authSucceeded = true
                     onLoginSuccessListener?.invoke()
                     dismiss()

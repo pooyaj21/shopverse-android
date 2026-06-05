@@ -2,6 +2,7 @@ package com.shopverse.android.presentation.screen.cart
 
 import androidx.lifecycle.viewModelScope
 import com.shopverse.android.core.cart.CartManager
+import com.shopverse.android.presentation.architecture.Alert
 import com.shopverse.android.presentation.architecture.BaseViewModelState
 import com.shopverse.core.domain.order.SubmitOrderUseCase
 import com.shopverse.core.model.LocalCartItem
@@ -15,8 +16,6 @@ class CartViewModel(
     private val submitOrderUseCase: SubmitOrderUseCase,
 ) : BaseViewModelState<CartUiModel, CartEffect>() {
 
-    private var isPlacingOrder: Boolean = false
-
     init {
         cartManager.itemsFlow
             .onEach { items -> render(items) }
@@ -28,37 +27,30 @@ class CartViewModel(
     }
 
     fun placeOrder() {
-        if (isPlacingOrder) return
-        val items = cartManager.itemsFlow.value
-        if (items.isEmpty()) {
-            viewModelScope.launch { sendEffect(CartEffect.ShowMessage("Your cart is empty.")) }
-            return
-        }
-        isPlacingOrder = true
         viewModelScope.launch {
+            val items = cartManager.itemsFlow.value
+            if (items.isEmpty()) {
+                sendAlert(Alert.Info("Your cart is empty."))
+                return@launch
+            }
             setLoadingState(false)
             when (val result = submitOrderUseCase(items)) {
                 is AppResult.Success -> {
                     cartManager.clear()
-                    sendEffect(CartEffect.ShowMessage("Order placed!"))
+                    sendAlert(Alert.Success("Order placed!"))
                     sendEffect(CartEffect.OrderPlaced(orderId = result.value))
                 }
 
                 is AppResult.Error.Local -> {
                     render(cartManager.itemsFlow.value)
-                    sendEffect(
-                        CartEffect.ShowMessage("Network problem. Please try again.")
-                    )
+                    sendAlert(Alert.Error("Network problem. Please try again."))
                 }
 
                 is AppResult.Error.Remote -> {
                     render(cartManager.itemsFlow.value)
-                    sendEffect(
-                        CartEffect.ShowMessage(prettyRemoteError(result.httpCode, result.message))
-                    )
+                    sendAlert(Alert.Error(prettyRemoteError(result.httpCode, result.message)))
                 }
             }
-            isPlacingOrder = false
         }
     }
 

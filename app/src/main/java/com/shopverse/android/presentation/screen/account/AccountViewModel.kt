@@ -1,6 +1,7 @@
 package com.shopverse.android.presentation.screen.account
 
 import androidx.lifecycle.viewModelScope
+import com.shopverse.android.presentation.architecture.Alert
 import com.shopverse.android.presentation.architecture.BaseViewModelState
 import com.shopverse.core.domain.auth.DeleteAccountUseCase
 import com.shopverse.core.domain.auth.GetSavedProfileUseCase
@@ -11,8 +12,6 @@ class AccountViewModel(
     private val getSavedProfileUseCase: GetSavedProfileUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
 ) : BaseViewModelState<AccountUiModel, AccountEffect>() {
-
-    private var isDeleting = false
 
     init {
         refresh()
@@ -27,32 +26,29 @@ class AccountViewModel(
     }
 
     fun deleteAccount() {
-        if (isDeleting) return
-        isDeleting = true
         viewModelScope.launch {
             setLoadingState(onFrontOfContent = true)
             when (val result = deleteAccountUseCase()) {
                 is AppResult.Success -> {
-                    sendEffect(AccountEffect.ShowMessage("Your account has been deleted."))
+                    sendAlert(Alert.Success("Your account has been deleted."))
                     sendEffect(AccountEffect.AccountDeleted)
                 }
 
                 is AppResult.Error.Local -> {
                     refresh()
-                    sendEffect(AccountEffect.ShowMessage("Network problem. Please try again."))
+                    sendAlert(Alert.Error("Network problem. Please try again."))
                 }
 
                 is AppResult.Error.Remote -> {
                     refresh()
-                    sendEffect(
-                        AccountEffect.ShowMessage(
+                    sendAlert(
+                        Alert.Error(
                             if (result.httpCode == 401) "Please log in again to delete your account."
                             else "Couldn't delete your account (${result.httpCode})."
                         )
                     )
                 }
             }
-            isDeleting = false
         }
     }
 

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.shopverse.android.core.color.AppColorProvider
 import com.shopverse.android.core.stage.AppStage
@@ -35,12 +34,6 @@ class AccountFragment : BaseFragmentVMState<AccountView, AccountUiModel, Account
                 is AccountEffect.AccountDeleted -> {
                     navigateAndClearStack(AppStage.ESTABLISHED, currentSource)
                 }
-
-                is AccountEffect.ShowMessage -> Toast.makeText(
-                    requireContext(),
-                    effect.message,
-                    Toast.LENGTH_SHORT,
-                ).show()
             }
         }
     }

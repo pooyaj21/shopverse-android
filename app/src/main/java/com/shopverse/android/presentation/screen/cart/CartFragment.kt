@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.shopverse.android.core.extension.notImplementedYet
 import com.shopverse.android.core.stage.AppStage
 import com.shopverse.android.presentation.architecture.BaseFragmentVMState
@@ -36,12 +35,6 @@ class CartFragment : BaseFragmentVMState<CartView, CartUiModel, CartViewModel>()
                     navigateAndClearStack(AppStage.ESTABLISHED, Source.Orders)
                     notImplementedYet()
                 }
-
-                is CartEffect.ShowMessage -> Toast.makeText(
-                    requireContext(),
-                    effect.message,
-                    Toast.LENGTH_SHORT,
-                ).show()
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.shopverse.android.presentation.screen.auth
 
 import androidx.lifecycle.viewModelScope
+import com.shopverse.android.presentation.architecture.Alert
 import com.shopverse.android.presentation.architecture.BaseViewModelState
 import com.shopverse.android.presentation.architecture.ViewState
 import com.shopverse.core.domain.auth.LoginUseCase
@@ -11,7 +12,7 @@ import kotlinx.coroutines.launch
 class AuthBottomSheetViewModel(
     private val loginUseCase: LoginUseCase,
     private val signUpUseCase: SignUpUseCase,
-) : BaseViewModelState<AuthBottomSheetUiModel, AuthBottomSheetViewModel.Effect>(
+) : BaseViewModelState<AuthBottomSheetUiModel, AuthBottomSheetEffect>(
     initialState = ViewState.Success(
         AuthBottomSheetUiModel(mode = AuthMode.Login, isSubmitting = false)
     )
@@ -34,9 +35,10 @@ class AuthBottomSheetViewModel(
         if (currentModel.isSubmitting) return
         when (val validation = validate(currentModel.mode, name, email, password)) {
             is Validation.Invalid -> {
-                viewModelScope.launch { sendEffect(Effect.ShowMessage(validation.message)) }
+                viewModelScope.launch { sendAlert(Alert.Error(validation.message)) }
                 return
             }
+
             Validation.Valid -> Unit
         }
         viewModelScope.launch {
@@ -51,12 +53,16 @@ class AuthBottomSheetViewModel(
             }
             setSuccessState(currentModel.copy(isSubmitting = false))
             when (result) {
-                is AppResult.Success -> sendEffect(Effect.AuthCompleted)
-                is AppResult.Error.Local -> sendEffect(
-                    Effect.ShowMessage("Network problem. Please try again.")
-                )
-                is AppResult.Error.Remote -> sendEffect(
-                    Effect.ShowMessage(prettyRemoteError(result.httpCode, result.message))
+                is AppResult.Success -> sendEffect(AuthBottomSheetEffect.AuthCompleted)
+                is AppResult.Error.Local -> sendAlert(Alert.Error("Network problem. Please try again."))
+
+                is AppResult.Error.Remote -> sendAlert(
+                    Alert.Error(
+                        prettyRemoteError(
+                            result.httpCode,
+                            result.message
+                        )
+                    )
                 )
             }
         }
@@ -86,10 +92,13 @@ class AuthBottomSheetViewModel(
             message.contains("invalid_grant", ignoreCase = true) -> "Wrong email or password."
             message.contains("user_already_exists", ignoreCase = true) ->
                 "An account with this email already exists."
+
             message.contains("weak_password", ignoreCase = true) ->
                 "Password is too weak. Use at least 6 characters."
+
             message.contains("email_confirmation_required", ignoreCase = true) ->
                 "Check your email to confirm your account, then log in."
+
             else -> "Something went wrong ($httpCode)."
         }
     }
@@ -99,10 +108,6 @@ class AuthBottomSheetViewModel(
         data class Invalid(val message: String) : Validation()
     }
 
-    sealed class Effect {
-        data class ShowMessage(val message: String) : Effect()
-        data object AuthCompleted : Effect()
-    }
 
     companion object {
         private const val MIN_PASSWORD_LENGTH = 6
