@@ -7,6 +7,7 @@ import com.shopverse.android.core.extension.notImplementedYet
 import com.shopverse.android.presentation.architecture.BaseFragmentVMState
 import com.shopverse.android.presentation.screen.profile.core.ProfileUiModel
 import com.shopverse.android.presentation.ui.Source
+import com.shopverse.android.presentation.ui.navigateToAccount
 import com.shopverse.android.presentation.ui.navigateToOrders
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -35,7 +36,7 @@ class ProfileFragment : BaseFragmentVMState<ProfileView, ProfileUiModel, Profile
 
     private fun handleNavigatable(item: ProfileUiModel.Item.Navigatable) {
         when (item) {
-            ProfileUiModel.Item.Navigatable.Profile -> ensureUserLogin { ensureUserLogin { notImplementedYet() } }
+            ProfileUiModel.Item.Navigatable.Profile -> ensureUserLogin { navigateToAccount(Source.Profile) }
             ProfileUiModel.Item.Navigatable.Orders -> ensureUserLogin { navigateToOrders(Source.Profile) }
         }
     }

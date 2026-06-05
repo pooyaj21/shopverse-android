@@ -19,4 +19,8 @@
     <fragment android:id="@+id/ordersFragment" android:label="OrdersFragment" android:name="com.shopverse.android.presentation.screen.orders.OrdersFragment">
         <argument android:name="screenArgs" app:argType="com.shopverse.android.presentation.ui.NoRequirementArgs"/>
     </fragment>
+
+    <fragment android:id="@+id/accountFragment" android:label="AccountFragment" android:name="com.shopverse.android.presentation.screen.account.AccountFragment">
+        <argument android:name="screenArgs" app:argType="com.shopverse.android.presentation.ui.NoRequirementArgs"/>
+    </fragment>
 </navigation>

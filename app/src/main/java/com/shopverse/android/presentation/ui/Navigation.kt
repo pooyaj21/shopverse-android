@@ -57,3 +57,7 @@ fun Fragment.navigateToNavigator(args: NavigatorScreenArgs) {
 fun Fragment.navigateToOrders(source: Source) {
     navigate(R.id.ordersFragment, NoRequirementArgs(source))
 }
+
+fun Fragment.navigateToAccount(source: Source) {
+    navigate(R.id.accountFragment, NoRequirementArgs(source))
+}

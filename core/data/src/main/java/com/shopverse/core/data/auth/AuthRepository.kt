@@ -6,6 +6,7 @@ import com.shopverse.core.service.api.AuthService
 import com.shopverse.core.service.api.dto.AuthSessionDto
 import com.shopverse.core.service.supabase.SessionTokenStore
 import com.shopverse.core.shared.AppResult
+import com.shopverse.core.shared.doOnSuccess
 
 interface AuthRepository {
     suspend fun login(email: String, password: String): AppResult<UserProfile>
@@ -13,6 +14,7 @@ interface AuthRepository {
     fun getSavedProfile(): UserProfile?
     fun getAccessToken(): String?
     fun logout()
+    suspend fun deleteAccount(): AppResult<Unit>
 }
 
 private const val KEY_PROFILE_ID = "auth_profile_id"
@@ -52,6 +54,13 @@ class AuthRepositoryImpl(
         sharedPref.remove(KEY_PROFILE_ID)
         sharedPref.remove(KEY_PROFILE_NAME)
         sharedPref.remove(KEY_PROFILE_EMAIL)
+    }
+
+    override suspend fun deleteAccount(): AppResult<Unit> {
+        val bearer = getAccessToken()
+            ?: return AppResult.Error.Remote(httpCode = 401, message = "unauthenticated", cause = null)
+        return authService.deleteAccount(bearer = bearer)
+            .doOnSuccess { logout() }
     }
 
     private fun persistAndMap(result: AppResult<AuthSessionDto>): AppResult<UserProfile> =

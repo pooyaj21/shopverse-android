@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 interface AuthService {
     suspend fun signUp(name: String, email: String, password: String): AppResult<AuthSessionDto>
     suspend fun login(email: String, password: String): AppResult<AuthSessionDto>
+    suspend fun deleteAccount(bearer: String): AppResult<Unit>
 }
 
 class AuthServiceImpl(
@@ -47,4 +48,11 @@ class AuthServiceImpl(
             body = payload,
         ) { body, _ -> json.decodeFromString(AuthSessionDto.serializer(), body) }
     }
+
+    override suspend fun deleteAccount(bearer: String): AppResult<Unit> =
+        client.functionsPost(
+            path = "delete-account",
+            body = "{}",
+            bearer = bearer,
+        ) { _, _ -> }
 }
