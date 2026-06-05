@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.shopverse.android.core.extension.notImplementedYet
+import com.shopverse.android.core.stage.AppStage
 import com.shopverse.android.presentation.architecture.BaseFragmentVMState
 import com.shopverse.android.presentation.ui.Source
+import com.shopverse.android.presentation.ui.navigateAndClearStack
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class CartFragment : BaseFragmentVMState<CartView, CartUiModel, CartViewModel>() {
@@ -27,14 +30,14 @@ class CartFragment : BaseFragmentVMState<CartView, CartUiModel, CartViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onEffect<CartViewModel.Effect> { effect ->
+        onEffect<CartEffect> { effect ->
             when (effect) {
-                is CartViewModel.Effect.OrderPlaced -> Toast.makeText(
-                    requireContext(),
-                    "Order placed!",
-                    Toast.LENGTH_SHORT,
-                ).show()
-                is CartViewModel.Effect.ShowMessage -> Toast.makeText(
+                is CartEffect.OrderPlaced -> {
+                    navigateAndClearStack(AppStage.ESTABLISHED, Source.Orders)
+                    notImplementedYet()
+                }
+
+                is CartEffect.ShowMessage -> Toast.makeText(
                     requireContext(),
                     effect.message,
                     Toast.LENGTH_SHORT,

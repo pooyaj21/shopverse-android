@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class CartViewModel(
     private val cartManager: CartManager,
     private val submitOrderUseCase: SubmitOrderUseCase,
-) : BaseViewModelState<CartUiModel, CartViewModel.Effect>() {
+) : BaseViewModelState<CartUiModel, CartEffect>() {
 
     private var isPlacingOrder: Boolean = false
 
@@ -31,7 +31,7 @@ class CartViewModel(
         if (isPlacingOrder) return
         val items = cartManager.itemsFlow.value
         if (items.isEmpty()) {
-            viewModelScope.launch { sendEffect(Effect.ShowMessage("Your cart is empty.")) }
+            viewModelScope.launch { sendEffect(CartEffect.ShowMessage("Your cart is empty.")) }
             return
         }
         isPlacingOrder = true
@@ -40,20 +40,21 @@ class CartViewModel(
             when (val result = submitOrderUseCase(items)) {
                 is AppResult.Success -> {
                     cartManager.clear()
-                    sendEffect(Effect.OrderPlaced(orderId = result.value))
+                    sendEffect(CartEffect.ShowMessage("Order placed!"))
+                    sendEffect(CartEffect.OrderPlaced(orderId = result.value))
                 }
 
                 is AppResult.Error.Local -> {
                     render(cartManager.itemsFlow.value)
                     sendEffect(
-                        Effect.ShowMessage("Network problem. Please try again.")
+                        CartEffect.ShowMessage("Network problem. Please try again.")
                     )
                 }
 
                 is AppResult.Error.Remote -> {
                     render(cartManager.itemsFlow.value)
                     sendEffect(
-                        Effect.ShowMessage(prettyRemoteError(result.httpCode, result.message))
+                        CartEffect.ShowMessage(prettyRemoteError(result.httpCode, result.message))
                     )
                 }
             }
@@ -70,12 +71,11 @@ class CartViewModel(
         httpCode == 401 -> "Please log in to place an order."
         message.isNullOrBlank() -> "Something went wrong ($httpCode)."
         message.contains("insufficient_stock", ignoreCase = true) -> "Some items are out of stock."
-        message.contains("product_not_found", ignoreCase = true) -> "A product is no longer available."
-        else -> "Something went wrong ($httpCode)."
-    }
+        message.contains(
+            "product_not_found",
+            ignoreCase = true
+        ) -> "A product is no longer available."
 
-    sealed class Effect {
-        data class OrderPlaced(val orderId: String) : Effect()
-        data class ShowMessage(val message: String) : Effect()
+        else -> "Something went wrong ($httpCode)."
     }
 }
