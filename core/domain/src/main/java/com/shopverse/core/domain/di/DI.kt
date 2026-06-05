@@ -9,6 +9,7 @@ import com.shopverse.core.domain.cart.DeleteAllProductInCartUseCase
 import com.shopverse.core.domain.cart.DeleteProductFromCartUseCase
 import com.shopverse.core.domain.cart.InsertOrUpdateProductToCartUseCase
 import com.shopverse.core.domain.cart.SelectAllProductInCartUseCase
+import com.shopverse.core.domain.order.GetOrdersUseCase
 import com.shopverse.core.domain.order.SubmitOrderUseCase
 import com.shopverse.core.domain.product.GetProductsUseCase
 import org.koin.dsl.module
@@ -29,4 +30,5 @@ val domainDiModule = module {
     factory { DeleteAllProductInCartUseCase(cartRepository = get()) }
 
     factory { SubmitOrderUseCase(orderRepository = get()) }
+    factory { GetOrdersUseCase(orderRepository = get()) }
 }

@@ -9,6 +9,7 @@ import com.shopverse.android.presentation.screen.cart.CartViewModel
 import com.shopverse.android.presentation.screen.home.HomeViewModel
 import com.shopverse.android.presentation.screen.navigator.NavigatorViewModel
 import com.shopverse.android.presentation.screen.onboarding.OnboardingViewModel
+import com.shopverse.android.presentation.screen.orders.OrdersViewModel
 import com.shopverse.android.presentation.screen.profile.ProfileViewModel
 import com.shopverse.android.presentation.screen.splash.SplashViewModel
 import com.shopverse.core.service.supabase.SupabaseConfig
@@ -40,6 +41,7 @@ val appDiModule = module {
     viewModel { NavigatorViewModel() }
     viewModel { HomeViewModel(getProducts = get(), cartManager = get()) }
     viewModel { CartViewModel(cartManager = get(), submitOrderUseCase = get()) }
+    viewModel { OrdersViewModel(getOrders = get()) }
     viewModel { AuthBottomSheetViewModel(loginUseCase = get(), signUpUseCase = get()) }
     viewModel {
         ProfileViewModel(

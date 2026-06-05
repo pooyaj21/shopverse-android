@@ -53,3 +53,7 @@ fun Fragment.navigateToOnboarding(source: Source) {
 fun Fragment.navigateToNavigator(args: NavigatorScreenArgs) {
     navigate(R.id.navigatorFragment, args)
 }
+
+fun Fragment.navigateToOrders(source: Source) {
+    navigate(R.id.ordersFragment, NoRequirementArgs(source))
+}
