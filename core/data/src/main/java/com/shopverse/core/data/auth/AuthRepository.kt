@@ -12,6 +12,7 @@ interface AuthRepository {
     suspend fun login(email: String, password: String): AppResult<UserProfile>
     suspend fun signUp(name: String, email: String, password: String): AppResult<UserProfile>
     fun getSavedProfile(): UserProfile?
+    suspend fun fetchProfile(): AppResult<UserProfile>
     fun getAccessToken(): String?
     fun logout()
     suspend fun deleteAccount(): AppResult<Unit>
@@ -47,6 +48,22 @@ class AuthRepositoryImpl(
         )
     }
 
+    override suspend fun fetchProfile(): AppResult<UserProfile> {
+        val bearer = getAccessToken()
+            ?: return AppResult.Error.Remote(httpCode = 401, message = "unauthenticated", cause = null)
+        return when (val result = authService.getUser(bearer = bearer)) {
+            is AppResult.Success -> {
+                val user = result.value
+                persistProfile(userId = user.id, userName = user.metadata?.name, userEmail = user.email)
+                AppResult.Success(
+                    UserProfile(id = user.id, name = user.metadata?.name, email = user.email)
+                )
+            }
+            is AppResult.Error.Local -> result
+            is AppResult.Error.Remote -> result
+        }
+    }
+
     override fun getAccessToken(): String? = tokenStore.accessToken
 
     override fun logout() {
@@ -78,7 +95,8 @@ class AuthRepositoryImpl(
                         cause = null,
                     )
                 } else {
-                    persistSession(accessToken, dto.refreshToken, user.id, user.metadata?.name, user.email)
+                    tokenStore.update(accessToken = accessToken, refreshToken = dto.refreshToken)
+                    persistProfile(userId = user.id, userName = user.metadata?.name, userEmail = user.email)
                     AppResult.Success(
                         UserProfile(id = user.id, name = user.metadata?.name, email = user.email)
                     )
@@ -88,14 +106,11 @@ class AuthRepositoryImpl(
             is AppResult.Error.Remote -> result
         }
 
-    private fun persistSession(
-        accessToken: String,
-        refreshToken: String?,
+    private fun persistProfile(
         userId: String,
         userName: String?,
         userEmail: String?,
     ) {
-        tokenStore.update(accessToken = accessToken, refreshToken = refreshToken)
         sharedPref.write(KEY_PROFILE_ID, userId)
         if (userName != null) sharedPref.write(KEY_PROFILE_NAME, userName)
         if (userEmail != null) sharedPref.write(KEY_PROFILE_EMAIL, userEmail)

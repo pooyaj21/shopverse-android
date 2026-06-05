@@ -1,6 +1,7 @@
 package com.shopverse.core.service.api
 
 import com.shopverse.core.service.api.dto.AuthSessionDto
+import com.shopverse.core.service.api.dto.AuthUserDto
 import com.shopverse.core.service.api.dto.LoginRequestDto
 import com.shopverse.core.service.api.dto.SignUpRequestDto
 import com.shopverse.core.service.supabase.SupabaseClient
@@ -10,6 +11,7 @@ import kotlinx.serialization.json.Json
 interface AuthService {
     suspend fun signUp(name: String, email: String, password: String): AppResult<AuthSessionDto>
     suspend fun login(email: String, password: String): AppResult<AuthSessionDto>
+    suspend fun getUser(bearer: String): AppResult<AuthUserDto>
     suspend fun deleteAccount(bearer: String): AppResult<Unit>
 }
 
@@ -48,6 +50,12 @@ class AuthServiceImpl(
             body = payload,
         ) { body, _ -> json.decodeFromString(AuthSessionDto.serializer(), body) }
     }
+
+    override suspend fun getUser(bearer: String): AppResult<AuthUserDto> =
+        client.authGet(
+            path = "user",
+            bearer = bearer,
+        ) { body, _ -> json.decodeFromString(AuthUserDto.serializer(), body) }
 
     override suspend fun deleteAccount(bearer: String): AppResult<Unit> =
         client.functionsPost(

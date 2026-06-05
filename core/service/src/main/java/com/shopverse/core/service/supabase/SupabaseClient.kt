@@ -35,6 +35,22 @@ class SupabaseClient(
         parse = parse,
     )
 
+    suspend fun <T> authGet(
+        path: String,
+        query: Map<String, String> = emptyMap(),
+        bearer: String? = null,
+        parse: (body: String, headers: Headers) -> T,
+    ): AppResult<T> = execute(
+        baseUrl = config.authUrl,
+        path = path,
+        query = query,
+        extraHeaders = emptyMap(),
+        bearer = bearer,
+        body = null,
+        method = HttpMethod.GET,
+        parse = parse,
+    )
+
     suspend fun <T> authPost(
         path: String,
         query: Map<String, String> = emptyMap(),

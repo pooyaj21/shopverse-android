@@ -45,7 +45,11 @@ val appDiModule = module {
     viewModel { CartViewModel(cartManager = get(), submitOrderUseCase = get()) }
     viewModel { OrdersViewModel(getOrders = get()) }
     viewModel {
-        AccountViewModel(getSavedProfileUseCase = get(), deleteAccountUseCase = get())
+        AccountViewModel(
+            getSavedProfileUseCase = get(),
+            fetchProfileUseCase = get(),
+            deleteAccountUseCase = get(),
+        )
     }
     viewModel { params ->
         ProductDetailViewModel(product = params.get(), cartManager = get())

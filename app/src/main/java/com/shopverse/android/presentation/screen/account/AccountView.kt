@@ -45,6 +45,7 @@ class AccountView(
             AppLayout.Linear.horizontalLine()
                 .margin(
                     start = SIDE_PADDING_DP.dp,
+                    end = SIDE_PADDING_DP.dp,
                     bottom = GAP_PADDING_DP.dp,
                     top = GAP_PADDING_DP.dp
                 )

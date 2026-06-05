@@ -2,6 +2,7 @@ package com.shopverse.core.domain.di
 
 import com.shopverse.core.data.di.dataDiModule
 import com.shopverse.core.domain.auth.DeleteAccountUseCase
+import com.shopverse.core.domain.auth.FetchProfileUseCase
 import com.shopverse.core.domain.auth.GetSavedProfileUseCase
 import com.shopverse.core.domain.auth.LoginUseCase
 import com.shopverse.core.domain.auth.LogoutUseCase
@@ -23,6 +24,7 @@ val domainDiModule = module {
     factory { LoginUseCase(authRepository = get()) }
     factory { SignUpUseCase(authRepository = get()) }
     factory { GetSavedProfileUseCase(authRepository = get()) }
+    factory { FetchProfileUseCase(authRepository = get()) }
     factory { LogoutUseCase(authRepository = get()) }
     factory { DeleteAccountUseCase(authRepository = get()) }
 
