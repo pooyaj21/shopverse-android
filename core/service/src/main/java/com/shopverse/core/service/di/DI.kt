@@ -8,6 +8,7 @@ import com.shopverse.core.service.api.ProductService
 import com.shopverse.core.service.api.ProductServiceImpl
 import com.shopverse.core.service.supabase.SupabaseClient
 import com.shopverse.core.service.supabase.SupabaseConfig
+import com.shopverse.core.service.supabase.SupabaseTokenAuthenticator
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -24,10 +25,17 @@ val serviceDiModule = module {
         }
     }
 
+    // SessionTokenStore is bound in core:data on top of SharedPref; both
+    // modules are always loaded together, so the lazy get() resolves fine.
+    single {
+        SupabaseTokenAuthenticator(config = get(), tokenStore = get(), json = get())
+    }
+
     single<OkHttpClient> {
         OkHttpClient.Builder()
             .connectTimeout(20, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS)
+            .authenticator(get<SupabaseTokenAuthenticator>())
             .addInterceptor(
                 HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
             )

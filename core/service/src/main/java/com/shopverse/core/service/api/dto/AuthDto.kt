@@ -22,6 +22,11 @@ data class LoginRequestDto(
 )
 
 @Serializable
+data class RefreshTokenRequestDto(
+    @SerialName("refresh_token") val refreshToken: String,
+)
+
+@Serializable
 data class AuthSessionDto(
     @SerialName("access_token") val accessToken: String? = null,
     @SerialName("refresh_token") val refreshToken: String? = null,

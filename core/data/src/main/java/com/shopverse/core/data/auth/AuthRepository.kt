@@ -4,6 +4,7 @@ import com.shopverse.core.model.UserProfile
 import com.shopverse.core.preferences.SharedPref
 import com.shopverse.core.service.api.AuthService
 import com.shopverse.core.service.api.dto.AuthSessionDto
+import com.shopverse.core.service.supabase.SessionTokenStore
 import com.shopverse.core.shared.AppResult
 
 interface AuthRepository {
@@ -17,12 +18,11 @@ interface AuthRepository {
 private const val KEY_PROFILE_ID = "auth_profile_id"
 private const val KEY_PROFILE_NAME = "auth_profile_name"
 private const val KEY_PROFILE_EMAIL = "auth_profile_email"
-private const val KEY_ACCESS_TOKEN = "auth_access_token"
-private const val KEY_REFRESH_TOKEN = "auth_refresh_token"
 
 class AuthRepositoryImpl(
     private val authService: AuthService,
     private val sharedPref: SharedPref,
+    private val tokenStore: SessionTokenStore,
 ) : AuthRepository {
 
     override suspend fun login(email: String, password: String): AppResult<UserProfile> =
@@ -45,11 +45,10 @@ class AuthRepositoryImpl(
         )
     }
 
-    override fun getAccessToken(): String? = sharedPref.read(KEY_ACCESS_TOKEN, null)
+    override fun getAccessToken(): String? = tokenStore.accessToken
 
     override fun logout() {
-        sharedPref.remove(KEY_ACCESS_TOKEN)
-        sharedPref.remove(KEY_REFRESH_TOKEN)
+        tokenStore.clear()
         sharedPref.remove(KEY_PROFILE_ID)
         sharedPref.remove(KEY_PROFILE_NAME)
         sharedPref.remove(KEY_PROFILE_EMAIL)
@@ -87,8 +86,7 @@ class AuthRepositoryImpl(
         userName: String?,
         userEmail: String?,
     ) {
-        sharedPref.write(KEY_ACCESS_TOKEN, accessToken)
-        if (refreshToken != null) sharedPref.write(KEY_REFRESH_TOKEN, refreshToken)
+        tokenStore.update(accessToken = accessToken, refreshToken = refreshToken)
         sharedPref.write(KEY_PROFILE_ID, userId)
         if (userName != null) sharedPref.write(KEY_PROFILE_NAME, userName)
         if (userEmail != null) sharedPref.write(KEY_PROFILE_EMAIL, userEmail)
