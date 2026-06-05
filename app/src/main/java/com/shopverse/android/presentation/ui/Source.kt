@@ -13,4 +13,5 @@ sealed class Source : Parcelable {
     @Parcelize data object Profile : Source()
     @Parcelize data object Orders : Source()
     @Parcelize data object Account : Source()
+    @Parcelize data object ProductDetail : Source()
 }

@@ -11,6 +11,7 @@ import com.shopverse.android.presentation.screen.home.HomeViewModel
 import com.shopverse.android.presentation.screen.navigator.NavigatorViewModel
 import com.shopverse.android.presentation.screen.onboarding.OnboardingViewModel
 import com.shopverse.android.presentation.screen.orders.OrdersViewModel
+import com.shopverse.android.presentation.screen.productDetail.ProductDetailViewModel
 import com.shopverse.android.presentation.screen.profile.ProfileViewModel
 import com.shopverse.android.presentation.screen.splash.SplashViewModel
 import com.shopverse.core.service.supabase.SupabaseConfig
@@ -45,6 +46,9 @@ val appDiModule = module {
     viewModel { OrdersViewModel(getOrders = get()) }
     viewModel {
         AccountViewModel(getSavedProfileUseCase = get(), deleteAccountUseCase = get())
+    }
+    viewModel { params ->
+        ProductDetailViewModel(product = params.get(), cartManager = get())
     }
     viewModel { AuthBottomSheetViewModel(loginUseCase = get(), signUpUseCase = get()) }
     viewModel {

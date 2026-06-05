@@ -23,4 +23,8 @@
     <fragment android:id="@+id/accountFragment" android:label="AccountFragment" android:name="com.shopverse.android.presentation.screen.account.AccountFragment">
         <argument android:name="screenArgs" app:argType="com.shopverse.android.presentation.ui.NoRequirementArgs"/>
     </fragment>
+
+    <fragment android:id="@+id/productDetailFragment" android:label="ProductDetailFragment" android:name="com.shopverse.android.presentation.screen.productDetail.ProductDetailFragment">
+        <argument android:name="screenArgs" app:argType="com.shopverse.android.presentation.screen.productDetail.ProductDetailScreenArgs"/>
+    </fragment>
 </navigation>
