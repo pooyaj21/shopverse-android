@@ -21,8 +21,8 @@ android {
     namespace = "com.shopverse.android"
     defaultConfig {
         applicationId = "com.shopverse.android"
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = getVersionCode()
+        versionName = "1.0.0"
         buildConfigField("String", "SCREEN_ARGS", "\"$SCREEN_ARGS\"")
         buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseAnonKey\"")
@@ -54,4 +54,23 @@ dependencies {
     // RxJava 2 + RxAndroid
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
+}
+
+fun Project.getVersionCode(): Int {
+    // Read version code without incrementing to avoid file I/O on every build
+    // Use incrementVersionCode task to increment when needed
+    val versionFile = file("version.properties")
+    if (!versionFile.exists()) {
+        return 1
+    }
+    val props = Properties().apply {
+        load(versionFile.inputStream())
+    }
+    val oldCode = props.getProperty("VERSION_CODE").toIntOrNull() ?: 1
+    val newCode = oldCode + 1
+    props.setProperty("VERSION_CODE", newCode.toString())
+    versionFile.writer().use {
+        props.store(it, null)
+    }
+    return newCode
 }
