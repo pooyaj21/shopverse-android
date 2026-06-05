@@ -4,6 +4,7 @@ import com.shopverse.android.BuildConfig
 import com.shopverse.android.core.cart.CartManager
 import com.shopverse.android.core.stage.AppStageStore
 import com.shopverse.android.core.stage.AppStageStoreImpl
+import com.shopverse.android.presentation.feature.deepLink.DeepLinkLauncher
 import com.shopverse.android.presentation.screen.account.AccountViewModel
 import com.shopverse.android.presentation.screen.auth.AuthBottomSheetViewModel
 import com.shopverse.android.presentation.screen.cart.CartViewModel
@@ -26,6 +27,13 @@ val appDiModule = module {
         SupabaseConfig(
             baseUrl = BuildConfig.SUPABASE_URL,
             anonKey = BuildConfig.SUPABASE_ANON_KEY,
+        )
+    }
+
+    single {
+        DeepLinkLauncher(
+            appStageStore = get(),
+            getSavedProfileUseCase = get()
         )
     }
 

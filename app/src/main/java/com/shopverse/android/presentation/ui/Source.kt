@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 sealed class Source : Parcelable {
     @Parcelize data class DeepLink(val deeplink: String) : Source()
+    @Parcelize data object AppLaunch : Source()
     @Parcelize data object Splash : Source()
     @Parcelize object Navigator : Source()
     @Parcelize data object Onboarding : Source()

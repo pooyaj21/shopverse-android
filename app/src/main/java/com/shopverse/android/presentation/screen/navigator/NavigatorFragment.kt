@@ -65,4 +65,8 @@ class NavigatorFragment : BaseFragmentVM<NavigatorView, NavigatorViewModel>() {
     override fun onDestroyRootView() {
         rootView?.onDestroyView()
     }
+
+    fun getRootView(): NavigatorView? {
+        return rootView
+    }
 }
