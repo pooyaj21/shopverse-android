@@ -38,9 +38,10 @@ import kotlin.math.roundToInt
 @SuppressLint("ViewConstructor")
 class ProductDetailView(
     context: Context,
+    onRetryClickListener: () -> Unit,
     private val onAddToCartClickListener: OnClickListener,
     private val onGoToCartClickListener: OnClickListener,
-) : BaseView.State<ProductDetailUiModel>(context, onRetryClickListener = {}) {
+) : BaseView.State<ProductDetailUiModel>(context, onRetryClickListener = onRetryClickListener) {
 
     override val title: String = ""
 

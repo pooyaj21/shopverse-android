@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import com.shopverse.android.core.extension.notImplementedYet
 import com.shopverse.android.core.stage.AppStage
 import com.shopverse.android.presentation.architecture.BaseFragmentVMState
+import com.shopverse.android.presentation.screen.productDetail.ProductDetailScreenArgs
 import com.shopverse.android.presentation.ui.Source
 import com.shopverse.android.presentation.ui.navigateAndClearStack
+import com.shopverse.android.presentation.ui.navigateToProductDetail
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class CartFragment : BaseFragmentVMState<CartView, CartUiModel, CartViewModel>() {
@@ -23,6 +25,16 @@ class CartFragment : BaseFragmentVMState<CartView, CartUiModel, CartViewModel>()
         savedInstanceState: Bundle?,
     ): CartView = CartView(
         context = requireContext(),
+        onItemClickListener = { item ->
+            navigateToProductDetail(
+                args = ProductDetailScreenArgs(
+                    source = currentSource,
+                    requirements = ProductDetailScreenArgs.Requirements(
+                        productId = item.id
+                    )
+                )
+            )
+        },
         onRemoveClickListener = { item -> viewModel.removeFromCart(item) },
         onPlaceOrderClickListener = { ensureUserLogin { viewModel.placeOrder() } },
     )

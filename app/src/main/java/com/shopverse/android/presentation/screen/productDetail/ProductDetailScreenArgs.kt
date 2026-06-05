@@ -3,7 +3,6 @@ package com.shopverse.android.presentation.screen.productDetail
 import android.os.Parcelable
 import com.shopverse.android.presentation.ui.ScreenArgument
 import com.shopverse.android.presentation.ui.Source
-import com.shopverse.core.model.Product
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -14,6 +13,6 @@ class ProductDetailScreenArgs(
 
     @Parcelize
     data class Requirements(
-        val product: Product,
+        val productId: String,
     ) : Parcelable
 }

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.shopverse.android.presentation.architecture.BaseFragmentVMState
 import com.shopverse.android.presentation.screen.navigator.NavigatorScreenArgs
 import com.shopverse.android.presentation.screen.navigator.NavigatorView
+import com.shopverse.android.presentation.screen.productDetail.ProductDetailScreenArgs
 import com.shopverse.android.presentation.ui.Source
 import com.shopverse.android.presentation.ui.navigateToNavigator
 import com.shopverse.android.presentation.ui.navigateToProductDetail
@@ -25,7 +26,14 @@ class HomeFragment : BaseFragmentVMState<HomeView, HomeUiModel, HomeViewModel>()
         context = requireContext(),
         onLoadMore = { viewModel.loadMore() },
         onProductClickListener = { product ->
-            navigateToProductDetail(source = currentSource, product = product)
+            navigateToProductDetail(
+                args = ProductDetailScreenArgs(
+                    source = currentSource,
+                    requirements = ProductDetailScreenArgs.Requirements(
+                        productId = product.id
+                    )
+                )
+            )
         },
         onAddToCartClickListener = { product -> viewModel.addToCart(product) },
         onCartClickListener = {

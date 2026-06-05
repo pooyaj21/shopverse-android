@@ -16,11 +16,15 @@ import com.shopverse.core.model.LocalCartItem
 @SuppressLint("ViewConstructor")
 class CartView(
     context: Context,
+    onItemClickListener: (LocalCartItem) -> Unit,
     onRemoveClickListener: (LocalCartItem) -> Unit,
     onPlaceOrderClickListener: OnClickListener,
 ) : BaseView.State<CartUiModel>(context, onRetryClickListener = {}) {
 
-    private val cartAdapter = CartAdapter(onRemoveClickListener = onRemoveClickListener)
+    private val cartAdapter = CartAdapter(
+        onItemClickListener = onItemClickListener,
+        onRemoveClickListener = onRemoveClickListener
+    )
 
     override val title: String = "Cart"
     override val emptyMessage: String = "Your cart is empty."

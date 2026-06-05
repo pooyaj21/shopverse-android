@@ -8,12 +8,14 @@ import com.shopverse.android.core.layout.AppLayout
 import com.shopverse.core.model.LocalCartItem
 
 class CartAdapter(
+    private val onItemClickListener: (LocalCartItem) -> Unit,
     private val onRemoveClickListener: (LocalCartItem) -> Unit,
 ) : ListAdapter<LocalCartItem, CartAdapter.CartViewHolder>(DIFF) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val cell = CartCellView(
             context = parent.context,
+            onItemClickListener = onItemClickListener,
             onRemoveClickListener = onRemoveClickListener,
         ).apply {
             layoutParams = AppLayout.Recycler.defaultParams()

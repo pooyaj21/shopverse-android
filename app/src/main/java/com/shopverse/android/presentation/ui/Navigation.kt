@@ -11,7 +11,6 @@ import com.shopverse.android.R
 import com.shopverse.android.core.stage.AppStage
 import com.shopverse.android.presentation.screen.navigator.NavigatorScreenArgs
 import com.shopverse.android.presentation.screen.productDetail.ProductDetailScreenArgs
-import com.shopverse.core.model.Product
 
 
 private fun Fragment.navigate(
@@ -64,12 +63,6 @@ fun Fragment.navigateToAccount(source: Source) {
     navigate(R.id.accountFragment, NoRequirementArgs(source))
 }
 
-fun Fragment.navigateToProductDetail(source: Source, product: Product) {
-    navigate(
-        R.id.productDetailFragment,
-        ProductDetailScreenArgs(
-            source = source,
-            requirements = ProductDetailScreenArgs.Requirements(product = product),
-        )
-    )
+fun Fragment.navigateToProductDetail(args: ProductDetailScreenArgs) {
+    navigate(R.id.productDetailFragment, args)
 }

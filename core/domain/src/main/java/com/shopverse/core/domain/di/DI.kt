@@ -13,6 +13,7 @@ import com.shopverse.core.domain.cart.InsertOrUpdateProductToCartUseCase
 import com.shopverse.core.domain.cart.SelectAllProductInCartUseCase
 import com.shopverse.core.domain.order.GetOrdersUseCase
 import com.shopverse.core.domain.order.SubmitOrderUseCase
+import com.shopverse.core.domain.product.GetProductUseCase
 import com.shopverse.core.domain.product.GetProductsUseCase
 import org.koin.dsl.module
 
@@ -20,6 +21,7 @@ val domainDiModule = module {
     includes(dataDiModule)
 
     factory { GetProductsUseCase(productRepository = get()) }
+    factory { GetProductUseCase(productRepository = get()) }
 
     factory { LoginUseCase(authRepository = get()) }
     factory { SignUpUseCase(authRepository = get()) }

@@ -52,7 +52,11 @@ val appDiModule = module {
         )
     }
     viewModel { params ->
-        ProductDetailViewModel(product = params.get(), cartManager = get())
+        ProductDetailViewModel(
+            productId = params.get(),
+            getProductUseCase = get(),
+            cartManager = get(),
+        )
     }
     viewModel { AuthBottomSheetViewModel(loginUseCase = get(), signUpUseCase = get()) }
     viewModel {

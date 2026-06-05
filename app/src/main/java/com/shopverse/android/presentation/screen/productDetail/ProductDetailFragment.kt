@@ -20,7 +20,7 @@ class ProductDetailFragment :
     private val args: ProductDetailFragmentArgs by navArgs()
 
     override val viewModel: ProductDetailViewModel by viewModel {
-        parametersOf(args.screenArgs.requirements.product)
+        parametersOf(args.screenArgs.requirements.productId)
     }
 
     override fun onCreateRootView(
@@ -29,6 +29,7 @@ class ProductDetailFragment :
         savedInstanceState: Bundle?,
     ): ProductDetailView = ProductDetailView(
         context = requireContext(),
+        onRetryClickListener = { viewModel.loadProduct() },
         onAddToCartClickListener = { viewModel.addToCart() },
         onGoToCartClickListener = {
             navigateToNavigator(

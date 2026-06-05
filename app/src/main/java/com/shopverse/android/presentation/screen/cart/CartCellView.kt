@@ -34,6 +34,7 @@ import com.shopverse.core.model.LocalCartItem
 @SuppressLint("ViewConstructor")
 class CartCellView(
     context: Context,
+    private val onItemClickListener: (LocalCartItem) -> Unit,
     private val onRemoveClickListener: (LocalCartItem) -> Unit,
 ) : AppHorizontalLinearLayout(context) {
 
@@ -131,7 +132,7 @@ class CartCellView(
         if (hasDiscount) {
             oldPriceView.text = formatPrice(oldPrice, item.currency)
         }
-
+        setOnClickListener { onItemClickListener(item) }
         removeButton.setOnClickListener { onRemoveClickListener(item) }
     }
 

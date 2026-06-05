@@ -12,6 +12,8 @@ interface ProductService {
         limit: Int = PagedResult.DEFAULT_PAGE_SIZE,
         offset: Int = 0,
     ): AppResult<PagedResult<ProductDto>>
+
+    suspend fun getById(id: String): AppResult<ProductDto>
 }
 
 class ProductServiceImpl(
@@ -36,4 +38,12 @@ class ProductServiceImpl(
                 ?: (offset + items.size)
             PagedResult(items = items, offset = offset, limit = limit, total = total)
         }
+
+    override suspend fun getById(id: String): AppResult<ProductDto> =
+        client.get(
+            path = "products",
+            query = mapOf("id" to "eq.$id"),
+            // Single-object response: PostgREST errors when no row matches the id.
+            extraHeaders = mapOf("Accept" to "application/vnd.pgrst.object+json"),
+        ) { body, _ -> json.decodeFromString(ProductDto.serializer(), body) }
 }

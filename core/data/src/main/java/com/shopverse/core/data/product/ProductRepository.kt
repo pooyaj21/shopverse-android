@@ -12,6 +12,8 @@ interface ProductRepository {
         limit: Int = PagedResult.DEFAULT_PAGE_SIZE,
         offset: Int = 0,
     ): AppResult<PagedResult<Product>>
+
+    suspend fun getProduct(productId: String): AppResult<Product>
 }
 
 class ProductRepositoryImpl(private val productService: ProductService) : ProductRepository {
@@ -25,4 +27,7 @@ class ProductRepositoryImpl(private val productService: ProductService) : Produc
                 total = dtoPage.total,
             )
         }
+
+    override suspend fun getProduct(productId: String): AppResult<Product> =
+        productService.getById(id = productId).mapIfSuccess { it.toDomain() }
 }
