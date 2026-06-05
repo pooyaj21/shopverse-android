@@ -2,7 +2,6 @@ package com.shopverse.android.presentation.screen.orders
 
 import androidx.lifecycle.viewModelScope
 import com.shopverse.android.presentation.architecture.BaseViewModelState
-import com.shopverse.android.presentation.architecture.ViewState
 import com.shopverse.core.domain.order.GetOrdersUseCase
 import com.shopverse.core.model.OrderSummary
 import com.shopverse.core.model.PagedResult
@@ -11,9 +10,7 @@ import kotlinx.coroutines.launch
 
 class OrdersViewModel(
     private val getOrders: GetOrdersUseCase,
-) : BaseViewModelState<OrdersUiModel, Unit>(
-    initialState = ViewState.Loading(onFrontOfContent = false)
-) {
+) : BaseViewModelState<OrdersUiModel, Unit>() {
 
     private val pageSize = PagedResult.DEFAULT_PAGE_SIZE
     private val accumulated = mutableListOf<OrderSummary>()

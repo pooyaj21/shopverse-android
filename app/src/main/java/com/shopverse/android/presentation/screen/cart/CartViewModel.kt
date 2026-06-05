@@ -3,7 +3,6 @@ package com.shopverse.android.presentation.screen.cart
 import androidx.lifecycle.viewModelScope
 import com.shopverse.android.core.cart.CartManager
 import com.shopverse.android.presentation.architecture.BaseViewModelState
-import com.shopverse.android.presentation.architecture.ViewState
 import com.shopverse.core.domain.order.SubmitOrderUseCase
 import com.shopverse.core.model.LocalCartItem
 import com.shopverse.core.shared.AppResult
@@ -14,9 +13,7 @@ import kotlinx.coroutines.launch
 class CartViewModel(
     private val cartManager: CartManager,
     private val submitOrderUseCase: SubmitOrderUseCase,
-) : BaseViewModelState<CartUiModel, CartViewModel.Effect>(
-    initialState = ViewState.Loading(onFrontOfContent = false)
-) {
+) : BaseViewModelState<CartUiModel, CartViewModel.Effect>() {
 
     private var isPlacingOrder: Boolean = false
 
@@ -39,17 +36,26 @@ class CartViewModel(
         }
         isPlacingOrder = true
         viewModelScope.launch {
+            setLoadingState(false)
             when (val result = submitOrderUseCase(items)) {
                 is AppResult.Success -> {
                     cartManager.clear()
                     sendEffect(Effect.OrderPlaced(orderId = result.value))
                 }
-                is AppResult.Error.Local -> sendEffect(
-                    Effect.ShowMessage("Network problem. Please try again.")
-                )
-                is AppResult.Error.Remote -> sendEffect(
-                    Effect.ShowMessage(prettyRemoteError(result.httpCode, result.message))
-                )
+
+                is AppResult.Error.Local -> {
+                    render(cartManager.itemsFlow.value)
+                    sendEffect(
+                        Effect.ShowMessage("Network problem. Please try again.")
+                    )
+                }
+
+                is AppResult.Error.Remote -> {
+                    render(cartManager.itemsFlow.value)
+                    sendEffect(
+                        Effect.ShowMessage(prettyRemoteError(result.httpCode, result.message))
+                    )
+                }
             }
             isPlacingOrder = false
         }

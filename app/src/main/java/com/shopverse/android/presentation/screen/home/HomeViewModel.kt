@@ -15,9 +15,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val getProducts: GetProductsUseCase,
     private val cartManager: CartManager,
-) : BaseViewModelState<HomeUiModel, Unit>(
-    initialState = ViewState.Loading(onFrontOfContent = false)
-) {
+) : BaseViewModelState<HomeUiModel, Unit>() {
 
     private val pageSize = PagedResult.DEFAULT_PAGE_SIZE
     private val accumulated = mutableListOf<Product>()
