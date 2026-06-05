@@ -11,6 +11,7 @@ import com.shopverse.core.domain.cart.DeleteAllProductInCartUseCase
 import com.shopverse.core.domain.cart.DeleteProductFromCartUseCase
 import com.shopverse.core.domain.cart.InsertOrUpdateProductToCartUseCase
 import com.shopverse.core.domain.cart.SelectAllProductInCartUseCase
+import com.shopverse.core.domain.order.GetOrderUseCase
 import com.shopverse.core.domain.order.GetOrdersUseCase
 import com.shopverse.core.domain.order.SubmitOrderUseCase
 import com.shopverse.core.domain.product.GetProductUseCase
@@ -37,4 +38,5 @@ val domainDiModule = module {
 
     factory { SubmitOrderUseCase(orderRepository = get()) }
     factory { GetOrdersUseCase(orderRepository = get()) }
+    factory { GetOrderUseCase(orderRepository = get()) }
 }

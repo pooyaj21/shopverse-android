@@ -10,6 +10,7 @@ import com.shopverse.android.presentation.screen.cart.CartViewModel
 import com.shopverse.android.presentation.screen.home.HomeViewModel
 import com.shopverse.android.presentation.screen.navigator.NavigatorViewModel
 import com.shopverse.android.presentation.screen.onboarding.OnboardingViewModel
+import com.shopverse.android.presentation.screen.orderDetail.OrderDetailViewModel
 import com.shopverse.android.presentation.screen.orders.OrdersViewModel
 import com.shopverse.android.presentation.screen.productDetail.ProductDetailViewModel
 import com.shopverse.android.presentation.screen.profile.ProfileViewModel
@@ -44,6 +45,9 @@ val appDiModule = module {
     viewModel { HomeViewModel(getProducts = get(), cartManager = get()) }
     viewModel { CartViewModel(cartManager = get(), submitOrderUseCase = get()) }
     viewModel { OrdersViewModel(getOrders = get()) }
+    viewModel { params ->
+        OrderDetailViewModel(orderId = params.get(), getOrderUseCase = get())
+    }
     viewModel {
         AccountViewModel(
             getSavedProfileUseCase = get(),

@@ -2,6 +2,7 @@ package com.shopverse.core.data.order
 
 import com.shopverse.core.data.auth.AuthRepository
 import com.shopverse.core.model.LocalCartItem
+import com.shopverse.core.model.OrderDetail
 import com.shopverse.core.model.OrderSummary
 import com.shopverse.core.model.PagedResult
 import com.shopverse.core.service.api.OrderService
@@ -17,6 +18,8 @@ interface OrderRepository {
         limit: Int = PagedResult.DEFAULT_PAGE_SIZE,
         offset: Int = 0,
     ): AppResult<PagedResult<OrderSummary>>
+
+    suspend fun getOrder(orderId: String): AppResult<OrderDetail>
 }
 
 class OrderRepositoryImpl(
@@ -54,5 +57,12 @@ class OrderRepositoryImpl(
                     total = dtoPage.total,
                 )
             }
+    }
+
+    override suspend fun getOrder(orderId: String): AppResult<OrderDetail> {
+        val bearer = authRepository.getAccessToken()
+            ?: return AppResult.Error.Remote(httpCode = 401, message = "unauthenticated", cause = null)
+        return orderService.getById(bearer = bearer, id = orderId)
+            .mapIfSuccess { it.toDomain() }
     }
 }

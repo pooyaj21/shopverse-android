@@ -10,6 +10,7 @@ import androidx.navigation.navOptions
 import com.shopverse.android.R
 import com.shopverse.android.core.stage.AppStage
 import com.shopverse.android.presentation.screen.navigator.NavigatorScreenArgs
+import com.shopverse.android.presentation.screen.orderDetail.OrderDetailScreenArgs
 import com.shopverse.android.presentation.screen.productDetail.ProductDetailScreenArgs
 
 
@@ -65,4 +66,8 @@ fun Fragment.navigateToAccount(source: Source) {
 
 fun Fragment.navigateToProductDetail(args: ProductDetailScreenArgs) {
     navigate(R.id.productDetailFragment, args)
+}
+
+fun Fragment.navigateToOrderDetail(args: OrderDetailScreenArgs) {
+    navigate(R.id.orderDetailFragment, args)
 }

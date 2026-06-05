@@ -3,9 +3,10 @@ package com.shopverse.android.presentation.screen.orders
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.shopverse.android.core.extension.notImplementedYet
 import com.shopverse.android.presentation.architecture.BaseFragmentVMState
+import com.shopverse.android.presentation.screen.orderDetail.OrderDetailScreenArgs
 import com.shopverse.android.presentation.ui.Source
+import com.shopverse.android.presentation.ui.navigateToOrderDetail
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class OrdersFragment : BaseFragmentVMState<OrdersView, OrdersUiModel, OrdersViewModel>() {
@@ -20,7 +21,16 @@ class OrdersFragment : BaseFragmentVMState<OrdersView, OrdersUiModel, OrdersView
         savedInstanceState: Bundle?,
     ): OrdersView = OrdersView(
         context = requireContext(),
-        onOrderClick = { notImplementedYet() },
+        onOrderClick = { orderId ->
+            navigateToOrderDetail(
+                args = OrderDetailScreenArgs(
+                    source = currentSource,
+                    requirements = OrderDetailScreenArgs.Requirements(
+                        orderId = orderId
+                    )
+                )
+            )
+        },
         onLoadMore = { viewModel.loadMore() },
         onRetryClickListener = { viewModel.refresh() },
     )

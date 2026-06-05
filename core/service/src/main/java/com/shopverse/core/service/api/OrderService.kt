@@ -1,6 +1,7 @@
 package com.shopverse.core.service.api
 
 import com.shopverse.core.model.PagedResult
+import com.shopverse.core.service.api.dto.OrderDetailDto
 import com.shopverse.core.service.api.dto.OrderSummaryDto
 import com.shopverse.core.service.api.dto.SubmitOrderEnvelopeDto
 import com.shopverse.core.service.api.dto.SubmitOrderItemDto
@@ -23,6 +24,8 @@ interface OrderService {
         limit: Int = PagedResult.DEFAULT_PAGE_SIZE,
         offset: Int = 0,
     ): AppResult<PagedResult<OrderSummaryDto>>
+
+    suspend fun getById(bearer: String, id: String): AppResult<OrderDetailDto>
 }
 
 class OrderServiceImpl(
@@ -71,4 +74,18 @@ class OrderServiceImpl(
                 ?: (offset + items.size)
             PagedResult(items = items, offset = offset, limit = limit, total = total)
         }
+
+    override suspend fun getById(bearer: String, id: String): AppResult<OrderDetailDto> =
+        client.get(
+            path = "orders",
+            query = mapOf(
+                "id" to "eq.$id",
+                "select" to "id,placed_at,total,original_total,currency," +
+                        "order_items(id,product_id,product_slug,product_title,unit_price,quantity,line_total," +
+                        "products(cover_image_url))",
+            ),
+            // Single-object response: PostgREST errors when no row matches the id.
+            extraHeaders = mapOf("Accept" to "application/vnd.pgrst.object+json"),
+            bearer = bearer,
+        ) { body, _ -> json.decodeFromString(OrderDetailDto.serializer(), body) }
 }

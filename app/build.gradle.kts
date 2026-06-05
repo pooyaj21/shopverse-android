@@ -51,6 +51,8 @@ dependencies {
     implementation(libs.drawabletoolbox)
     // Image loading
     implementation(libs.coil)
+    // QR code generation
+    implementation(libs.zxing.core)
     // RxJava 2 + RxAndroid
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
