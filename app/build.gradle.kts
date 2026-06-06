@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import java.util.Properties
 
 val SCREEN_ARGS = "screenArgs"
@@ -13,9 +15,8 @@ val localProps = Properties().apply {
     val f = rootProject.file("local.properties")
     if (f.exists()) f.inputStream().use { load(it) }
 }
-val supabaseUrl: String =
-    localProps.getProperty("supabase.url") ?: "https://cxfllbnxuvmeykjvtyeb.supabase.co"
-val supabaseAnonKey: String = localProps.getProperty("supabase.anonKey") ?: ""
+val supabaseUrl: String = localProps.getProperty("supabase.url")
+val supabaseAnonKey: String = localProps.getProperty("supabase.anonKey")
 
 android {
     namespace = "com.shopverse.android"
@@ -27,9 +28,21 @@ android {
         buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseAnonKey\"")
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file(localProps.getProperty("store"))
+            storePassword = localProps.getProperty("storePass")
+            keyAlias = localProps.getProperty("keyAlias")
+            keyPassword = localProps.getProperty("keyPass")
+        }
+    }
     buildTypes {
         getByName("debug") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+        }
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
