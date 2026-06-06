@@ -3,12 +3,14 @@ package com.shopverse.android.presentation.screen.profile
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.shopverse.android.core.extension.notImplementedYet
+import com.shopverse.android.core.extension.applyNightMode
 import com.shopverse.android.presentation.architecture.BaseFragmentVMState
 import com.shopverse.android.presentation.screen.profile.core.ProfileUiModel
+import com.shopverse.android.presentation.screen.profile.view.ThemeBottomSheetDialog
 import com.shopverse.android.presentation.ui.Source
 import com.shopverse.android.presentation.ui.navigateToAccount
 import com.shopverse.android.presentation.ui.navigateToOrders
+import com.shopverse.core.model.ThemeMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : BaseFragmentVMState<ProfileView, ProfileUiModel, ProfileViewModel>() {
@@ -16,6 +18,8 @@ class ProfileFragment : BaseFragmentVMState<ProfileView, ProfileUiModel, Profile
     override val currentSource: Source = Source.Profile
 
     override val viewModel: ProfileViewModel by viewModel()
+
+    private var themeDialog: ThemeBottomSheetDialog? = null
 
     override fun onCreateRootView(
         inflater: LayoutInflater,
@@ -26,7 +30,6 @@ class ProfileFragment : BaseFragmentVMState<ProfileView, ProfileUiModel, Profile
         onNavigatableClickListener = { item -> handleNavigatable(item) },
         onSimpleClickListener = { item -> handleSimple(item) },
         onEditableClickListener = { item -> handleEditable(item) },
-        onTogglableChangeListener = { item -> handleTogglable(item) },
     )
 
     override fun onResume() {
@@ -50,13 +53,26 @@ class ProfileFragment : BaseFragmentVMState<ProfileView, ProfileUiModel, Profile
 
     private fun handleEditable(item: ProfileUiModel.Item.Editable) {
         when (item) {
-            ProfileUiModel.Item.Editable.Language -> notImplementedYet()
+           is ProfileUiModel.Item.Editable.Theme -> showThemePicker(item.mode)
         }
     }
 
-    private fun handleTogglable(item: ProfileUiModel.Item.Togglable) {
-        when (item) {
-            is ProfileUiModel.Item.Togglable.DarkMode -> notImplementedYet()
+    private fun showThemePicker(current: ThemeMode) {
+        if (themeDialog == null) {
+            themeDialog = ThemeBottomSheetDialog(
+                context = requireContext(),
+                current = current,
+                onThemeSelectedListener = { mode ->
+                    viewModel.setThemeMode(mode)
+                    mode.applyNightMode()
+                },
+            ).apply {
+                setOnDismissListener {
+                    themeDialog = null
+                }
+            }.also {
+                it.show()
+            }
         }
     }
 }

@@ -75,6 +75,8 @@ val appDiModule = module {
         ProfileViewModel(
             getSavedProfileUseCase = get(),
             logoutUseCase = get(),
+            getThemeModeUseCase = get(),
+            setThemeModeUseCase = get(),
             appVersion = BuildConfig.VERSION_NAME,
             appBuildNumber = BuildConfig.VERSION_CODE.toString(),
         )

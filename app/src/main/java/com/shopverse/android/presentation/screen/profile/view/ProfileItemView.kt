@@ -5,9 +5,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.view.Gravity
 import android.view.View
-import android.widget.CompoundButton
 import androidx.appcompat.widget.AppCompatImageView
-import com.google.android.material.switchmaterial.SwitchMaterial
 import com.shopverse.android.R
 import com.shopverse.android.core.animation.AnimationType
 import com.shopverse.android.core.animation.addAnimate
@@ -90,29 +88,6 @@ abstract class ProfileItemView(context: Context) : AppHorizontalLinearLayout(con
         }
     }
 
-    class Togglable(context: Context) : ProfileItemView(context) {
-
-        private val switch = SwitchMaterial(context)
-
-        init {
-            clipChildren = false
-            addEndView(switch, AppLayout.Linear.get(AppLayout.WRAP, AppLayout.WRAP))
-        }
-
-        fun bind(item: ProfileUiModel.Item.Togglable) {
-            titleTextView.text = item.title
-            switch.isChecked = item.value
-        }
-
-        fun setOnCheckedChangeListener(listener: CompoundButton.OnCheckedChangeListener) {
-            switch.setOnCheckedChangeListener(listener)
-        }
-
-        fun setChecked(checked: Boolean) {
-            switch.isChecked = checked
-        }
-    }
-
     class Info(context: Context) : ProfileItemView(context) {
 
         private val valueTextView = AppTextView(context).apply {
@@ -134,6 +109,11 @@ abstract class ProfileItemView(context: Context) : AppHorizontalLinearLayout(con
     }
 
     class Editable(context: Context) : ProfileItemView(context) {
+        private val valueTextView = AppTextView(context).apply {
+            setTypography(Typography.R14)
+            setTextColor(AppColorProvider.gray)
+            applySingleLine()
+        }
 
         private val endIconView = AppCompatImageView(context).apply {
             setImageResource(R.drawable.ic_chevron_end)
@@ -141,11 +121,16 @@ abstract class ProfileItemView(context: Context) : AppHorizontalLinearLayout(con
         }
 
         init {
+            addEndView(
+                valueTextView,
+                AppLayout.Linear.wrapContent().apply { margin(end = VALUE_END_MARGIN_DP.dp) },
+            )
             addEndView(endIconView, AppLayout.Linear.get(20.dp))
         }
 
         fun bind(item: ProfileUiModel.Item.Editable) {
             titleTextView.text = item.title
+            valueTextView.text = item.value
         }
     }
 
@@ -153,5 +138,6 @@ abstract class ProfileItemView(context: Context) : AppHorizontalLinearLayout(con
         private const val ROW_HEIGHT_DP = 56
         private const val TITLE_HEIGHT_DP = 36
         private const val SIDE_PADDING_DP = 16
+        private const val VALUE_END_MARGIN_DP = 8
     }
 }

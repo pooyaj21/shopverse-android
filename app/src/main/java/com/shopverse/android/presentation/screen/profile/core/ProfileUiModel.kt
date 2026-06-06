@@ -1,5 +1,8 @@
 package com.shopverse.android.presentation.screen.profile.core
 
+import com.shopverse.android.core.extension.label
+import com.shopverse.core.model.ThemeMode
+
 data class ProfileUiModel(val items: List<Item>) {
 
     sealed class Item {
@@ -19,12 +22,11 @@ data class ProfileUiModel(val items: List<Item>) {
         }
 
         sealed class Editable(val title: String) : Item() {
-            data object Language : Editable("Language")
-        }
+            abstract val value: String
 
-        sealed class Togglable(val title: String) : Item() {
-            abstract val value: Boolean
-            data class DarkMode(override val value: Boolean) : Togglable("Dark mode")
+            data class Theme(val mode: ThemeMode) : Editable("Theme") {
+                override val value: String = mode.label
+            }
         }
 
         sealed class Info(val title: String, val value: String) : Item() {
@@ -36,6 +38,7 @@ data class ProfileUiModel(val items: List<Item>) {
     companion object {
         fun create(
             isLoggedIn: Boolean,
+            themeMode: ThemeMode,
             appVersion: String,
             appBuildNumber: String,
         ): ProfileUiModel {
@@ -50,6 +53,8 @@ data class ProfileUiModel(val items: List<Item>) {
                 }
 
                 add(Item.Title("App"))
+                add(Item.Editable.Theme(themeMode))
+                add(Item.Separator())
                 add(Item.Info.AppVersion(appVersion))
                 add(Item.Separator())
                 add(Item.Info.AppBuildNumber(appBuildNumber))

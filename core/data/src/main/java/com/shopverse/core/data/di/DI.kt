@@ -10,6 +10,8 @@ import com.shopverse.core.data.order.OrderRepository
 import com.shopverse.core.data.order.OrderRepositoryImpl
 import com.shopverse.core.data.product.ProductRepository
 import com.shopverse.core.data.product.ProductRepositoryImpl
+import com.shopverse.core.data.theme.ThemeRepository
+import com.shopverse.core.data.theme.ThemeRepositoryImpl
 import com.shopverse.core.preferences.di.preferencesDiModule
 import com.shopverse.core.service.di.serviceDiModule
 import com.shopverse.core.service.supabase.SessionTokenStore
@@ -26,6 +28,8 @@ val dataDiModule = module {
     single<ProductRepository> { ProductRepositoryImpl(productService = get()) }
 
     single<SessionTokenStore> { SessionTokenStoreImpl(sharedPref = get()) }
+
+    single<ThemeRepository> { ThemeRepositoryImpl(sharedPref = get()) }
 
     single<AuthRepository> {
         AuthRepositoryImpl(authService = get(), sharedPref = get(), tokenStore = get())

@@ -20,7 +20,6 @@ class ProfileView(
     private val onNavigatableClickListener: (ProfileUiModel.Item.Navigatable) -> Unit,
     private val onSimpleClickListener: (ProfileUiModel.Item.Simple) -> Unit,
     private val onEditableClickListener: (ProfileUiModel.Item.Editable) -> Unit,
-    private val onTogglableChangeListener: (ProfileUiModel.Item.Togglable) -> Unit,
 ) : BaseView.State<ProfileUiModel>(context, onRetryClickListener = {}) {
 
     override val title: String = "Profile"
@@ -43,26 +42,18 @@ class ProfileView(
                     bind(item)
                     setOnClickListener { onNavigatableClickListener(item) }
                 }
+
                 is ProfileUiModel.Item.Simple -> ProfileItemView.Simple(context).apply {
                     bind(item)
                     setOnClickListener { onSimpleClickListener(item) }
                 }
+
                 is ProfileUiModel.Item.Editable -> ProfileItemView.Editable(context).apply {
                     bind(item)
                     setOnClickListener { onEditableClickListener(item) }
                 }
+
                 is ProfileUiModel.Item.Info -> ProfileItemView.Info(context).apply { bind(item) }
-                is ProfileUiModel.Item.Togglable -> ProfileItemView.Togglable(context).apply {
-                    bind(item)
-                    setOnCheckedChangeListener { _, isChecked ->
-                        onTogglableChangeListener(
-                            when (item) {
-                                is ProfileUiModel.Item.Togglable.DarkMode ->
-                                    ProfileUiModel.Item.Togglable.DarkMode(isChecked)
-                            }
-                        )
-                    }
-                }
                 is ProfileUiModel.Item.Separator -> View(context).apply {
                     setBackgroundColor(AppColorProvider.imagePlaceholder)
                 }

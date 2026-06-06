@@ -16,6 +16,8 @@ import com.shopverse.core.domain.order.GetOrdersUseCase
 import com.shopverse.core.domain.order.SubmitOrderUseCase
 import com.shopverse.core.domain.product.GetProductUseCase
 import com.shopverse.core.domain.product.GetProductsUseCase
+import com.shopverse.core.domain.theme.GetThemeModeUseCase
+import com.shopverse.core.domain.theme.SetThemeModeUseCase
 import org.koin.dsl.module
 
 val domainDiModule = module {
@@ -35,6 +37,9 @@ val domainDiModule = module {
     factory { InsertOrUpdateProductToCartUseCase(cartRepository = get()) }
     factory { DeleteProductFromCartUseCase(cartRepository = get()) }
     factory { DeleteAllProductInCartUseCase(cartRepository = get()) }
+
+    factory { GetThemeModeUseCase(themeRepository = get()) }
+    factory { SetThemeModeUseCase(themeRepository = get()) }
 
     factory { SubmitOrderUseCase(orderRepository = get()) }
     factory { GetOrdersUseCase(orderRepository = get()) }
