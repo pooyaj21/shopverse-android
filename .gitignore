@@ -15,3 +15,4 @@ captures/
 *.jks
 *.keystore
 .kotlin/
+fastlane/report.xml

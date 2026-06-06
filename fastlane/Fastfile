@@ -1,0 +1,28 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build a signed release APK"
+  lane :build do
+    gradle(tasks: ["clean", ":app:assembleRelease"])
+  end
+
+  desc "Build a signed release APK and publish it as a GitHub release"
+  lane :release do
+    build
+
+    tag = ENV.fetch("RELEASE_TAG")
+    apk_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    renamed_apk = File.join(File.dirname(apk_path), "shopverse-#{tag}.apk")
+    File.rename(apk_path, renamed_apk)
+
+    set_github_release(
+      repository_name: "pooyaj21/shopverse-android",
+      api_token: ENV.fetch("GITHUB_TOKEN"),
+      tag_name: tag,
+      name: "ShopVerse #{tag}",
+      commitish: ENV["GITHUB_SHA"],
+      description: ENV["RELEASE_NOTES"] || "Automated release built by GitHub Actions + fastlane.",
+      upload_assets: [renamed_apk]
+    )
+  end
+end
