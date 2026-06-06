@@ -27,7 +27,8 @@ import com.shopverse.android.core.ui.AppVerticalLinearLayout
 import com.shopverse.android.presentation.component.AppCornerView
 import com.shopverse.android.presentation.component.AppTextView
 
-abstract class BaseBottomSheetDialog(context: Context) : BottomSheetDialog(context) {
+abstract class BaseBottomSheetDialog(context: Context) :
+    BottomSheetDialog(context, R.style.AppBottomSheetDialogTheme) {
     private val dialogCorner = 16.dp.toFloat()
     protected val fullScreen: Int get() = (Screen.size.height * 0.9).toInt()
     protected open val isExpandedByDefault: Boolean = true

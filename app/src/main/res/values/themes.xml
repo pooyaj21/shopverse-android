@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.ShopVerse" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+    <style name="Theme.ShopVerse" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+    </style>
 
     <!-- *************************** BottomSheet Dialog Styles *************************************
-                            It will apply on all BottomSheetDialogs
+                                It will apply on all BottomSheetDialogs
     ******************************************************************************************** -->
     <style name="AppBottomSheetDialogTheme" parent="@style/Theme.Design.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/RoundedBottomSheet</item>
