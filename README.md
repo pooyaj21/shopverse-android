@@ -47,29 +47,85 @@ Apply these in module `build.gradle.kts` instead of duplicating Android/Kotlin D
 SDK levels and JVM target are centralised in
 `build-logic/convention/.../Defaults.kt` — update there, not in individual modules.
 
-## What's NOT in here yet (intentional)
+## Implemented screens
 
-This is the architectural shell only. Every module compiles and the Koin
-graph is wired end-to-end, but no domain entities, services, repositories,
-or use cases are implemented yet. Coming per
-`../shopverse-idea/week-2-android-foundation.md` and
-`week-3-android-polish.md`:
-
-- Domain entities in `:core:model` (Product, Cart, Order, …)
-- Retrofit / Ktor services in `:core:service`
-- Room database + DAOs and repository impls in `:core:data`
-- Use cases in `:core:domain`
-- Compose screens + ViewModels in `:app/presentation/`
-- MainActivity + nav graph
+`app/presentation/screen/` — splash, onboarding, auth (login / sign-up),
+home, product detail, cart, orders + order detail (QR-code receipt),
+account / profile. Deep-link URI routing is wired through a central
+navigator. Use cases live in `:core:domain` (auth, orders, products, …)
+backed by Supabase.
 
 ## Build
 
 JDK 17 required.
 
 ```bash
-./gradlew assembleDebug     # debug APK (won't be installable until an Activity is added)
+./gradlew assembleDebug     # debug APK
 ./gradlew :app:build        # full module build
 ./gradlew lint
 ./gradlew test
 ./gradlew clean
 ```
+
+### Signing setup
+
+Both build types are signed with a release keystore. Builds read everything
+from `local.properties` (git-ignored):
+
+```properties
+sdk.dir=/path/to/Android/sdk
+
+supabase.url=https://<project>.supabase.co
+supabase.anonKey=<publishable anon key>
+
+store=../key.jks            # resolved relative to :app → repo root
+storePass=<store password>
+keyAlias=shopverse
+keyPass=<key password>
+```
+
+Generate the keystore once at the repo root (it is git-ignored):
+
+```bash
+keytool -genkeypair -v -keystore key.jks -alias shopverse \
+  -keyalg RSA -keysize 2048 -validity 10000 \
+  -storepass <store password> -keypass <key password> \
+  -dname "CN=Pooya Jalali, O=ShopVerse, C=US"
+```
+
+## Release pipeline (fastlane + GitHub Actions)
+
+`.github/workflows/release.yml` runs on every `v*` tag push (or manually
+via *Actions → Release → Run workflow*). It builds the signed release APK
+with fastlane and publishes a GitHub Release with the APK attached.
+
+Fastlane lanes (`fastlane/Fastfile`):
+
+```bash
+bundle exec fastlane android build     # clean + assembleRelease (signed APK)
+bundle exec fastlane android release   # build + create GitHub release with APK
+```
+
+Required repository **Actions secrets**:
+
+| Secret              | Value                                      |
+| ------------------- | ------------------------------------------ |
+| `KEYSTORE_BASE64`   | `base64 -i key.jks`                        |
+| `STORE_PASSWORD`    | keystore store password                    |
+| `KEY_ALIAS`         | key alias (`shopverse`)                    |
+| `KEY_PASSWORD`      | key password                               |
+| `SUPABASE_URL`      | Supabase project URL                       |
+| `SUPABASE_ANON_KEY` | Supabase publishable anon key              |
+
+(`GITHUB_TOKEN` is provided automatically by Actions.)
+
+Cutting a release:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Note: the workflow builds the commit the tag points to — after pushing a
+fix, re-point the tag (`git tag -d`, push the deletion, re-tag) rather than
+re-running the failed workflow, which would reuse the old commit.
