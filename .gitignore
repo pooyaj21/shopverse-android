@@ -16,3 +16,7 @@ captures/
 *.keystore
 .kotlin/
 fastlane/report.xml
+
+# local bundler install (fastlane)
+vendor/bundle/
+.bundle/

@@ -24,5 +24,24 @@ platform :android do
       description: ENV["RELEASE_NOTES"] || "Automated release built by GitHub Actions + fastlane.",
       upload_assets: [renamed_apk]
     )
+
+    distribute(apk_path: renamed_apk, release_notes: "ShopVerse #{tag}")
+  end
+
+  desc "Upload an APK to Firebase App Distribution (builds one if no apk_path is given)"
+  lane :distribute do |options|
+    apk_path = options[:apk_path]
+    unless apk_path
+      build
+      apk_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    end
+
+    firebase_app_distribution(
+      app: ENV.fetch("FIREBASE_APP_ID"),
+      android_artifact_type: "APK",
+      android_artifact_path: apk_path,
+      groups: ENV["FIREBASE_TESTER_GROUPS"] || "testers",
+      release_notes: options[:release_notes] || ENV["RELEASE_NOTES"] || "Built by fastlane"
+    )
   end
 end

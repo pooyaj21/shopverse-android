@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId = "com.shopverse.android"
         versionCode = getVersionCode()
-        versionName = "1.0.0"
+        versionName = "1.0.1"
         buildConfigField("String", "SCREEN_ARGS", "\"$SCREEN_ARGS\"")
         buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseAnonKey\"")
