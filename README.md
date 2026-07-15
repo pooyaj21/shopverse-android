@@ -1,5 +1,15 @@
 # shopverse-android
 
+## Get the app
+
+Want to try ShopVerse? Join the tester group on Firebase App Distribution
+and you'll get every release straight to your device:
+
+**[appdistribution.firebase.dev/i/e2d8948577a8848c](https://appdistribution.firebase.dev/i/e2d8948577a8848c)**
+
+Alternatively, grab the signed APK attached to the latest
+[GitHub Release](../../releases/latest).
+
 ## Module layout
 
 ```
@@ -97,25 +107,30 @@ keytool -genkeypair -v -keystore key.jks -alias shopverse \
 
 `.github/workflows/release.yml` runs on every `v*` tag push (or manually
 via *Actions → Release → Run workflow*). It builds the signed release APK
-with fastlane and publishes a GitHub Release with the APK attached.
+with fastlane, publishes a GitHub Release with the APK attached, and
+uploads the same APK to Firebase App Distribution (tester invite link at
+the top of this README).
 
 Fastlane lanes (`fastlane/Fastfile`):
 
 ```bash
-bundle exec fastlane android build     # clean + assembleRelease (signed APK)
-bundle exec fastlane android release   # build + create GitHub release with APK
+bundle exec fastlane android build       # clean + assembleRelease (signed APK)
+bundle exec fastlane android release     # build + GitHub release + Firebase distribution
+bundle exec fastlane android distribute  # upload an APK to Firebase App Distribution only
 ```
 
 Required repository **Actions secrets**:
 
-| Secret              | Value                                      |
-| ------------------- | ------------------------------------------ |
-| `KEYSTORE_BASE64`   | `base64 -i key.jks`                        |
-| `STORE_PASSWORD`    | keystore store password                    |
-| `KEY_ALIAS`         | key alias (`shopverse`)                    |
-| `KEY_PASSWORD`      | key password                               |
-| `SUPABASE_URL`      | Supabase project URL                       |
-| `SUPABASE_ANON_KEY` | Supabase publishable anon key              |
+| Secret                          | Value                                                    |
+| ------------------------------- | -------------------------------------------------------- |
+| `KEYSTORE_BASE64`               | `base64 -i key.jks`                                      |
+| `STORE_PASSWORD`                | keystore store password                                  |
+| `KEY_ALIAS`                     | key alias (`shopverse`)                                  |
+| `KEY_PASSWORD`                  | key password                                             |
+| `SUPABASE_URL`                  | Supabase project URL                                     |
+| `SUPABASE_ANON_KEY`             | Supabase publishable anon key                            |
+| `FIREBASE_APP_ID`               | Firebase Android app ID (`1:…:android:…`)                |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | service account key JSON (Firebase App Distribution Admin role) |
 
 (`GITHUB_TOKEN` is provided automatically by Actions.)
 
