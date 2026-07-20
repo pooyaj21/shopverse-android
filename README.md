@@ -5,7 +5,7 @@
 Want to try ShopVerse? Join the tester group on Firebase App Distribution
 and you'll get every release straight to your device:
 
-**[appdistribution.firebase.dev/i/e2d8948577a8848c](https://appdistribution.firebase.dev/i/e2d8948577a8848c)**
+**[Android App](https://appdistribution.firebase.dev/i/8288a49802ffd524)**
 
 Alternatively, grab the signed APK attached to the latest
 [GitHub Release](../../releases/latest).
